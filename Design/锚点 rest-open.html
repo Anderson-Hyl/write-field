@@ -1,0 +1,331 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>写作画布 · 锚点 rest / 披露 / 展开</title>
+<style>
+:root {
+  --bg: #EEF1F5;
+  --surface: #FFFFFF;
+  --ink: #15191F;
+  --muted: #5B6572;
+  --line: #D3DAE3;
+  --accent: #2D74CC;
+  --accent-soft: #E3EDF9;
+  --wire: #4A5361;
+  --ok: #2F7A3D;
+  --bad: #B23A3A;
+  --waiting: #C48A12;
+  --paper: #FBFCFD;
+  --gutter: 28px;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #0F1216; --surface: #171B21; --ink: #F2F5FA; --muted: #98A2AE;
+    --line: #2A313A; --accent: #5C9BEA; --accent-soft: #1B2A3E;
+    --wire: #98A2AE; --paper: #12161C; --gutter: 28px;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1120px; margin: 0 auto; padding: 40px 24px 96px; }
+.eyebrow {
+  font: 500 11px/1 ui-monospace, "SF Mono", Menlo, monospace;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+}
+h1 { font-size: 28px; line-height: 1.25; margin: 12px 0 14px; font-weight: 600; text-wrap: balance; }
+h2 {
+  font-size: 18px; font-weight: 600; margin: 48px 0 12px; padding-top: 20px;
+  border-top: 1px solid var(--line);
+}
+p { margin: 0 0 12px; max-width: 46em; }
+.lead { font-size: 17px; line-height: 1.65; color: var(--muted); }
+.reco {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
+  padding: 16px 20px; margin: 16px 0 8px; max-width: 52em;
+}
+.reco b { color: var(--accent); }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 16px;
+  margin: 20px 0 8px;
+}
+@media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
+.plate {
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.plate header {
+  display: flex; justify-content: space-between; align-items: baseline;
+  padding: 10px 14px 8px;
+  border-bottom: 1px solid var(--line);
+  font: 500 11px/1.4 ui-monospace, "SF Mono", Menlo, monospace;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+}
+.plate header strong { color: var(--ink); letter-spacing: 0; text-transform: none; font-size: 13px; }
+.scene {
+  position: relative;
+  height: 320px;
+  background:
+    linear-gradient(var(--line), var(--line)) 168px 0 / 1px 100% no-repeat,
+    var(--paper);
+}
+.body {
+  position: absolute; left: 0; top: 0; bottom: 0; width: 168px;
+  padding: 22px 10px 22px 0;
+}
+.p {
+  position: relative;
+  padding: 8px 10px 8px var(--gutter);
+  font-size: 12px; line-height: 1.55; color: var(--ink);
+}
+.p.dim { color: var(--muted); }
+.p .mark {
+  position: absolute; left: 9px; top: 14px;
+  width: 8px; height: 8px; border-radius: 50%;
+  background: var(--surface);
+  border: 1.5px solid var(--accent);
+}
+.p .mark.dot {
+  width: 6px; height: 6px; left: 10px; top: 15px;
+  background: var(--accent); border: 0;
+}
+.caption {
+  padding: 10px 14px 14px;
+  font-size: 13px; color: var(--muted); min-height: 4.6em;
+}
+.caption b { color: var(--ink); font-weight: 600; }
+.card {
+  position: absolute;
+  width: 168px;
+  background: var(--surface);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--ink) 8%, transparent);
+  padding: 10px 12px 12px;
+  font-size: 12px; line-height: 1.45;
+}
+.card .k {
+  font: 500 10px/1 ui-monospace, "SF Mono", Menlo, monospace;
+  letter-spacing: .08em; text-transform: uppercase; color: var(--accent);
+  margin-bottom: 6px;
+}
+.card .t { font-weight: 600; margin-bottom: 4px; }
+.card .q { color: var(--muted); }
+.hint {
+  position: absolute; font: 500 10px/1 ui-monospace, Menlo, monospace;
+  color: var(--muted); white-space: nowrap;
+}
+.live {
+  display: grid;
+  grid-template-columns: minmax(0, 1.1fr) minmax(0, .9fr);
+  gap: 20px;
+  margin-top: 8px;
+}
+@media (max-width: 860px) { .live { grid-template-columns: 1fr; } }
+.playground {
+  position: relative;
+  height: 380px;
+  background:
+    linear-gradient(var(--line), var(--line)) 220px 0 / 1px 100% no-repeat,
+    var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  overflow: hidden;
+}
+.playground .body { width: 220px; padding-top: 28px; }
+.playground .p { font-size: 13px; padding-right: 14px; }
+.playground .p.active { background: color-mix(in srgb, var(--accent) 7%, transparent); border-radius: 0 6px 6px 0; }
+.hit {
+  position: absolute; left: 2px; top: 8px; width: 22px; height: 22px;
+  border-radius: 50%; cursor: pointer;
+  background: transparent; border: 0; padding: 0;
+}
+.hit:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+.legend { font-size: 14px; color: var(--muted); }
+.legend code {
+  font: 12px ui-monospace, Menlo, monospace;
+  background: var(--accent-soft); padding: 1px 5px; border-radius: 3px;
+}
+ul.rules { max-width: 46em; padding-left: 1.2em; }
+ul.rules li { margin-bottom: 8px; }
+.dont { color: var(--bad); font-weight: 600; }
+.do { color: var(--ok); font-weight: 600; }
+#wire, #stubs { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="eyebrow">Write-field · 写作现场 · 结构草图 · 2026-09-16</div>
+  <h1>锚点是 hub：静默是标记，打开才连出卡</h1>
+  <p class="lead">不是「卡贴在段旁边」和「卡摆在画布上」二选一。段落 gutter 上的锚点跟 Mosaic 的 hub 一样，默认收着；circuit 线只在展开时出现。</p>
+  <div class="reco"><b>打开必须是点击 / 键盘，不要把 hover 当成打开。</b> hover 只披露短颈和一句标题。写字时指针不在 gutter，hover 一结束卡就消失，就没法边看资料边改这段。</div>
+
+  <h2>三种状态</h2>
+  <div class="grid">
+    <article class="plate">
+      <header><strong>静默</strong><span>rest</span></header>
+      <div class="scene">
+        <div class="body">
+          <div class="p dim">写作的价值在过程，不在成品。</div>
+          <div class="p">AI 的产物永远先落在画布上，不直接进入正文。<span class="mark dot"></span></div>
+          <div class="p dim">空间布局本身不是产物。</div>
+        </div>
+      </div>
+      <p class="caption"><b>有卡才有点。</b> 没有卡的段落什么都没有。接近 Mosaic 静默成员的 6px 标记，以及 <code>connect</code> 收掉 tile 之后剩下的圆。</p>
+    </article>
+    <article class="plate">
+      <header><strong>披露</strong><span>hover / 焦点</span></header>
+      <div class="scene">
+        <svg viewBox="0 0 360 320" width="100%" height="320" aria-hidden="true">
+          <path d="M22 78 L38 78" fill="none" stroke="var(--wire)" stroke-width="1.5" stroke-linecap="round" opacity=".7"/>
+          <path d="M18 82 L18 96 Q18 104 26 104 L40 104" fill="none" stroke="var(--wire)" stroke-width="1.5" stroke-linecap="round" opacity=".45"/>
+        </svg>
+        <div class="body">
+          <div class="p dim">写作的价值在过程，不在成品。</div>
+          <div class="p">AI 的产物永远先落在画布上，不直接进入正文。<span class="mark"></span></div>
+          <div class="p dim">空间布局本身不是产物。</div>
+        </div>
+        <div class="hint" style="left:46px;top:68px">资料 · 2</div>
+      </div>
+      <p class="caption"><b>关系墨水，不是卡片。</b> 短颈、数量、一句标题。Mosaic 的 Hub hover 也只把线从 10% 提到约 42%，tile 早就在——我们这边 tile 还不在。</p>
+    </article>
+    <article class="plate">
+      <header><strong>展开</strong><span>click / 键盘</span></header>
+      <div class="scene">
+        <svg viewBox="0 0 360 320" width="100%" height="320" aria-hidden="true">
+          <path d="M22 78 L38 78 L38 78 Q52 78 52 92 L52 118 Q52 132 66 132 L188 132"
+            fill="none" stroke="var(--wire)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+        <div class="body">
+          <div class="p dim">写作的价值在过程，不在成品。</div>
+          <div class="p">AI 的产物永远先落在画布上，不直接进入正文。<span class="mark"></span></div>
+          <div class="p dim">空间布局本身不是产物。</div>
+        </div>
+        <div class="card" style="left:188px;top:92px">
+          <div class="k">资料 · 引用</div>
+          <div class="t">Flowise 的教训</div>
+          <div class="q">「AI 的输出不是终点，是待审阅、待安置、待吸收的对象。」</div>
+        </div>
+      </div>
+      <p class="caption"><b>卡在画布上，线从 hub 长出来。</b> 创建时默认落在该段旁边；之后可以拖走。这是 Mosaic 的 <code>belong</code> / <code>wire</code>，不是批注栏。</p>
+    </article>
+  </div>
+
+  <h2>可点的现场</h2>
+  <p>左侧是正文。把指针放到第二段的标记上会披露；点一下才把卡钉开。再点一次收起。键盘：标记有焦点时按 Enter。</p>
+  <div class="live">
+    <div class="playground" id="play">
+      <svg id="stubs" viewBox="0 0 800 380" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <svg id="wire" viewBox="0 0 800 380" preserveAspectRatio="none" aria-hidden="true"></svg>
+      <div class="body">
+        <div class="p dim">写作的价值在过程，不在成品。手写让我们重新审视自己写过的东西。</div>
+        <div class="p" id="host">AI 的产物永远先落在画布上，不直接进入正文。画布是减速带。
+          <button class="hit" id="hit" aria-label="展开这段的卡片" title="点击展开"></button>
+          <span class="mark dot" id="mark"></span>
+        </div>
+        <div class="p dim">空间布局本身不是产物。它只有在帮助参照、恢复和收敛时才有价值。</div>
+      </div>
+      <div class="card" id="card" hidden style="left:268px;top:118px">
+        <div class="k">资料 · 引用</div>
+        <div class="t">Flowise 的教训</div>
+        <div class="q">「AI 的输出不是终点，是待审阅、待安置、待吸收的对象。」</div>
+      </div>
+      <div class="hint" id="title" hidden>资料 · 2</div>
+    </div>
+    <div class="legend">
+      <p><span class="do">要对齐 Mosaic 的</span>：静默压缩、circuit 圆角正交、打开时 hub→tile、一段一个 hub 而不是一排点。</p>
+      <p><span class="dont">不要对齐的</span>：Mosaic 的 tile 在 hover 之前就已经摊在画布上；写作的卡默认不在。Mosaic 的 hover 不会把成员「创建出来」。</p>
+      <p>展开集合进 <code>scenes.openCardIDs</code>。重新打开文章时，静默标记可以重算，哪些卡是摊开的不能丢——否则现场只剩一排点。</p>
+    </div>
+  </div>
+
+  <h2>一段多个操作</h2>
+  <p>同一段可以对不同句子提问、挂资料。<b>库里按句子（TextQuoteSelector），画面上这段仍然只有一个 hub。</b> 不要在字缝里插点，也不要横向一排锚点。打开之后卡多了，绕着这一个 hub 摊开，双向高亮再去点亮那一句。</p>
+  <h2>还没钉死</h2>
+  <ul class="rules">
+    <li>标记是实心点、空圆，还是带两根短颈的 <code>connect</code> 形。</li>
+    <li>一段同时展开几张卡的上限。原型允许多张，先不设硬顶。</li>
+    <li>光标进入该段要不要自动披露。倾向不要，保持「安静」。</li>
+    <li>gutter 拉新线的把手，和已有 hub 的命中，不要抢。空段落才出创建把手；有卡的段落，拖的是这个 hub。</li>
+  </ul>
+</div>
+<script>
+const play = document.getElementById('play');
+const hit = document.getElementById('hit');
+const mark = document.getElementById('mark');
+const card = document.getElementById('card');
+const title = document.getElementById('title');
+const host = document.getElementById('host');
+const stubs = document.getElementById('stubs');
+const wire = document.getElementById('wire');
+let open = false;
+let hover = false;
+
+function hub() {
+  const r = play.getBoundingClientRect();
+  const m = mark.getBoundingClientRect();
+  return { x: m.left - r.left + m.width / 2, y: m.top - r.top + m.height / 2 };
+}
+function cardOrigin() {
+  const r = play.getBoundingClientRect();
+  const c = card.getBoundingClientRect();
+  return { x: c.left - r.left, y: c.top - r.top + 24 };
+}
+function circuit(from, to) {
+  const neck = 16;
+  const n = { x: from.x + neck, y: from.y };
+  const e = { x: to.x - neck, y: to.y };
+  const midX = Math.round((n.x + e.x) / 2);
+  const r = 14;
+  return `M${from.x} ${from.y} L${n.x} ${n.y}
+    L${midX - r} ${n.y} Q${midX} ${n.y} ${midX} ${n.y + Math.sign(e.y - n.y) * r}
+    L${midX} ${e.y - Math.sign(e.y - n.y) * r} Q${midX} ${e.y} ${midX + r} ${e.y}
+    L${e.x} ${e.y} L${to.x} ${to.y}`;
+}
+function draw() {
+  const h = hub();
+  stubs.innerHTML = '';
+  wire.innerHTML = '';
+  if (hover && !open) {
+    stubs.innerHTML = `<path d="M${h.x} ${h.y} L${h.x + 16} ${h.y}" fill="none" stroke="var(--wire)" stroke-width="1.5" stroke-linecap="round"/>
+      <path d="M${h.x} ${h.y} L${h.x} ${h.y + 14} Q${h.x} ${h.y + 22} ${h.x + 8} ${h.y + 22} L${h.x + 18} ${h.y + 22}" fill="none" stroke="var(--wire)" stroke-width="1.5" stroke-linecap="round" opacity=".45"/>`;
+    title.hidden = false;
+    title.style.left = (h.x + 22) + 'px';
+    title.style.top = (h.y - 6) + 'px';
+    mark.classList.remove('dot');
+  } else {
+    title.hidden = true;
+    if (!open) mark.classList.add('dot');
+    else mark.classList.remove('dot');
+  }
+  if (open) {
+    card.hidden = false;
+    const t = cardOrigin();
+    wire.innerHTML = `<path d="${circuit(h, t)}" fill="none" stroke="var(--wire)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+  } else {
+    card.hidden = true;
+  }
+  host.classList.toggle('active', open || hover);
+}
+hit.addEventListener('pointerenter', () => { hover = true; draw(); });
+hit.addEventListener('pointerleave', () => { hover = false; draw(); });
+hit.addEventListener('click', () => { open = !open; draw(); });
+hit.addEventListener('keydown', (e) => {
+  if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); open = !open; draw(); }
+});
+window.addEventListener('resize', draw);
+draw();
+</script>
+</body>
+</html>
