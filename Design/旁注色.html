@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>写作现场 · 旁注色</title>
+<style>
+:root {
+  --bg: #F2F2F7; --ink: #1C1C1E; --muted: #6C6C70; --line: #D8D8DC;
+  --paper: #fff; --field: #E8E8ED;
+  --src: #007AFF; --open: #C47B17; --assist: #5B7C8A; --tension: #C4474A;
+  --bad: #B23A3A;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", system-ui, sans-serif;
+}
+.wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
+.nav { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; font: 500 12px/1 ui-monospace, Menlo, monospace; }
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a[aria-current="page"] { color: var(--ink); }
+.eyebrow { font: 500 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: 26px; font-weight: 600; margin: 10px 0 8px; }
+.lead { color: var(--muted); max-width: 44em; }
+.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
+@media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
+.card {
+  display: flex; gap: 8px; background: #fff; border: 1px solid rgba(0,0,0,.08);
+  border-radius: 6px; padding: 10px 12px 12px 8px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+}
+.bar { width: 2px; border-radius: 1px; flex: none; }
+.k { font-size: 11px; margin-bottom: 2px; }
+.t { font-weight: 500; }
+.q { font-size: 12px; color: var(--muted); margin-top: 2px; }
+.wrong .card { border: 0; color: #1a1a1a; }
+.fill-g { background: #D8EDD4; }
+.fill-p { background: #F3D6EA; }
+.note { margin-top: 18px; font-size: 14px; color: var(--muted); max-width: 44em; }
+.no { color: var(--bad); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="一次写作.html">一次写作</a>
+    <a href="iPad横-写作现场.html">iPad 横 · S1</a>
+    <a href="旁注色.html" aria-current="page">旁注色</a>
+    <a href="ai-进行中.html">AI 进行中</a>
+  </nav>
+  <div class="eyebrow">Write-field · 种类色 · 不是填色</div>
+  <h1>四种角色，一条竖线</h1>
+  <p class="lead">资料、待决、助手产出、反驳可以分色。卡永远是白的。颜色只在左边 2pt 和 caption。验证 / 生成资料 / 检视 / 图表不要各开一色——有结论的都算助手产出。</p>
+  <div class="row">
+    <div class="card">
+      <div class="bar" style="background:var(--src)"></div>
+      <div>
+        <div class="k" style="color:var(--src)">资料</div>
+        <div class="t">Flowise 的教训</div>
+        <div class="q">剪藏或检索到的出处。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="bar" style="background:var(--open)"></div>
+      <div>
+        <div class="k" style="color:var(--open)">待决</div>
+        <div class="t">这段的判断站得住吗？</div>
+        <div class="q">问题、待查、还没有结论的验证。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="bar" style="background:var(--assist)"></div>
+      <div>
+        <div class="k" style="color:var(--assist)">助手产出</div>
+        <div class="t">检视：前提未写明</div>
+        <div class="q">回答、检视、AI 找来的资料、待插入的图。</div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="bar" style="background:var(--tension)"></div>
+      <div>
+        <div class="k" style="color:var(--tension)">张力</div>
+        <div class="t">最强反驳</div>
+        <div class="q">反对这段或那张卡。不是「AI 判假」。</div>
+      </div>
+    </div>
+  </div>
+  <p class="note">进行中的虹彩 Glow 是状态，落地后熄掉，露出这条色条。</p>
+  <p class="note"><span class="no">不要：</span></p>
+  <div class="row wrong">
+    <div class="card fill-g"><div><div class="k">周围 · 资料</div><div class="t">整张绿</div></div></div>
+    <div class="card fill-p"><div><div class="k">周围 · 问题</div><div class="t">整张紫</div></div></div>
+  </div>
+</div>
+</body>
+</html>

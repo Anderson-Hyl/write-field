@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>写作画布 · 一次写作</title>
+<title>写作现场 · 一次写作</title>
 <style>
 :root {
-  --bg: #EEF1F5; --surface: #FFFFFF; --ink: #15191F; --muted: #5B6572;
-  --line: #D3DAE3; --accent: #2D74CC; --accent-soft: #E3EDF9; --wire: #4A5361;
-  --paper: #FBFCFD; --dim: #8A93A0;
+  --bg: #E8E4DC; --ink: #1A1A1A; --muted: #5C574E; --line: #D2CBBE;
+  --paper: #F7F4EE; --field: #EFEBE3; --surface: #FBFAF7;
+  --accent: #2C6BED; --wire: #3A3A3A; --dim: #8A8478;
+  --src: #3D7A45; --src-bg: #D8EDD4; --ask: #8B3D7A; --ask-bg: #F3D6EA;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0F1216; --surface: #171B21; --ink: #F2F5FA; --muted: #98A2AE;
-    --line: #2A313A; --accent: #5C9BEA; --accent-soft: #1B2A3E; --wire: #98A2AE;
-    --paper: #12161C; --dim: #6B7380;
+    --bg: #12110F; --ink: #F4F1EA; --muted: #A39B8E; --line: #2E2B26;
+    --paper: #1C1B18; --field: #161513; --surface: #22211E;
+    --accent: #6EA0F0; --wire: #C8C2B6; --dim: #7A7468;
+    --src: #8FCB96; --src-bg: #243328; --ask: #E4A7D4; --ask-bg: #332430;
   }
 }
 * { box-sizing: border-box; }
@@ -23,90 +25,162 @@ body {
   font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-.wrap { max-width: 720px; margin: 0 auto; padding: 40px 24px 96px; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 36px 24px 96px; }
+.nav {
+  display: flex; gap: 16px; margin-bottom: 24px;
+  font: 500 12px/1 ui-monospace, Menlo, monospace;
+}
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a[aria-current="page"] { color: var(--ink); }
 .eyebrow {
   font: 500 11px/1 ui-monospace, Menlo, monospace;
   letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
 }
-h1 { font-size: 28px; line-height: 1.25; margin: 12px 0 14px; font-weight: 600; text-wrap: balance; }
-.lead { font-size: 17px; line-height: 1.65; color: var(--muted); max-width: 40em; }
+h1 { font-size: 30px; line-height: 1.2; margin: 10px 0 12px; font-weight: 600; text-wrap: balance; }
+h2.sec { font-size: 18px; font-weight: 600; margin: 52px 0 12px; padding-top: 22px; border-top: 1px solid var(--line); }
+.lead { font-size: 17px; line-height: 1.65; color: var(--muted); max-width: 44em; }
 .reco {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
-  padding: 16px 20px; margin: 20px 0 32px; max-width: 40em;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 16px 20px; margin: 18px 0 20px; max-width: 48em;
 }
 .reco b { color: var(--accent); }
-.beat { margin: 0 0 36px; }
-.beat header {
-  display: flex; gap: 12px; align-items: baseline; margin-bottom: 10px;
+.key {
+  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  margin: 0 0 36px; max-width: 48em;
 }
-.n {
-  font: 500 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .08em;
-  color: var(--accent);
+@media (max-width: 640px) { .key { grid-template-columns: 1fr; } }
+.key > div {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 14px 16px;
 }
+.key h3 { font-size: 13px; margin: 0 0 6px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
+.key p { margin: 0; font-size: 14px; }
+.beat { margin: 0 0 40px; }
+.beat header { display: flex; gap: 12px; align-items: baseline; margin-bottom: 8px; }
+.n { font: 500 11px/1 ui-monospace, Menlo, monospace; color: var(--accent); letter-spacing: .08em; }
 .beat h2 { font-size: 16px; font-weight: 600; margin: 0; }
-.beat p { margin: 0 0 10px; color: var(--muted); font-size: 14px; }
-.frame {
-  position: relative; height: 220px; border: 1px solid var(--line);
-  border-radius: 12px; background: var(--paper); overflow: hidden;
+.beat > p { margin: 0 0 10px; color: var(--muted); font-size: 14px; max-width: 46em; }
+.stage {
+  position: relative; height: 420px; border-radius: 18px;
+  background: var(--field); overflow: hidden;
+  box-shadow: inset 0 0 0 1px var(--line);
 }
-.chrome {
-  height: 28px; border-bottom: 1px solid var(--line); background: var(--surface);
-  display: flex; align-items: center; padding: 0 12px; gap: 8px;
-  font: 500 11px/1 ui-monospace, Menlo, monospace; color: var(--muted);
+.stage.pad { height: 520px; width: min(100%, 420px); }
+.paper {
+  position: absolute; left: 50%; top: 22px; bottom: 22px; width: min(42%, 340px);
+  transform: translateX(-50%);
+  background: var(--paper); border-radius: 22px;
+  box-shadow: 0 18px 40px color-mix(in srgb, var(--ink) 10%, transparent);
+  padding: 28px 26px 24px;
+  font-size: 15px; line-height: 1.6;
 }
-.dot { width: 6px; height: 6px; border-radius: 50%; background: var(--line); }
-.song { margin-left: auto; }
-.body {
-  position: absolute; left: 0; top: 28px; bottom: 0; width: 42%;
-  padding: 16px 12px 16px 22px; font-size: 12px; line-height: 1.55;
-  border-right: 1px solid var(--line);
+.paper.focus { width: min(70%, 520px); }
+.paper h3 { font-size: 22px; font-weight: 600; margin: 0 0 16px; letter-spacing: -.02em; }
+.paper .p { margin: 0 0 10px; color: var(--dim); }
+.paper .p.here {
+  color: var(--ink);
+  background: color-mix(in srgb, var(--accent) 10%, transparent);
+  margin-left: -8px; margin-right: -8px; padding: 6px 8px; border-radius: 8px;
 }
-.body .p { position: relative; margin: 0 0 8px; }
-.body .p.here { background: color-mix(in srgb, var(--accent) 8%, transparent); margin-left: -8px; padding: 4px 8px; border-radius: 4px; }
-.body .p.dim { color: var(--dim); }
-.mark {
-  position: absolute; left: -16px; top: 8px; width: 7px; height: 7px;
-  border-radius: 50%; border: 1.5px solid var(--accent); background: var(--surface);
+.port {
+  position: absolute; width: 16px; height: 16px; border-radius: 50%;
+  background: var(--paper); border: 2px solid var(--ink);
+  box-shadow: 0 0 0 4px color-mix(in srgb, var(--paper) 80%, transparent);
 }
-.mark.solid { background: var(--accent); border: 0; width: 6px; height: 6px; left: -15px; top: 9px; }
-.handle {
-  position: absolute; left: -15px; top: 8px; width: 8px; height: 8px;
-  border-radius: 2px; background: var(--accent); opacity: .45;
-}
+.port.l { left: -8px; }
+.port.r { right: -8px; }
 .card {
-  position: absolute; width: 150px; background: var(--surface);
-  border: 1px solid var(--line); border-radius: 10px;
-  padding: 8px 10px; font-size: 11px; line-height: 1.4;
-  box-shadow: 0 6px 16px color-mix(in srgb, var(--ink) 7%, transparent);
+  position: absolute; width: 168px; min-height: 88px; border-radius: 18px;
+  padding: 14px 14px 16px; font-size: 13px; line-height: 1.4;
+  box-shadow: 0 10px 24px color-mix(in srgb, var(--ink) 12%, transparent);
 }
-.card .k {
-  font: 500 9px/1 ui-monospace, Menlo, monospace; letter-spacing: .08em;
-  text-transform: uppercase; color: var(--accent); margin-bottom: 4px;
-}
-.card .t { font-weight: 600; }
-.card .q { color: var(--muted); }
-.card.flat { box-shadow: none; opacity: .72; }
-.focus .body { width: 100%; border-right: 0; padding-right: 28px; }
-.focus .card { display: none; }
+.card.src { background: var(--src-bg); color: var(--ink); }
+.card.ask { background: var(--ask-bg); color: var(--ink); }
+.card .k { font: 600 10px/1 ui-monospace, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; opacity: .7; }
+.card .t { font-weight: 650; font-size: 15px; }
+.card .q { margin-top: 4px; opacity: .75; }
+.card.flat { opacity: .55; box-shadow: none; }
+.wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
 .joint {
-  font-size: 13px; color: var(--ink); max-width: 40em; margin-top: 8px;
+  font-size: 13px; color: var(--ink); max-width: 44em; margin-top: 10px;
   padding-left: 12px; border-left: 2px solid var(--accent);
+}
+.trio { display: grid; grid-template-columns: 1.2fr .7fr; gap: 16px; align-items: start; }
+@media (max-width: 800px) { .trio { grid-template-columns: 1fr; } }
+.wrong {
+  position: relative; height: 220px; border-radius: 14px; overflow: hidden;
+  background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
+}
+.wrong .col {
+  position: absolute; top: 12px; bottom: 12px; left: 12px; width: 42%;
+  background: var(--paper); border-right: 1px solid var(--line); padding: 12px; font-size: 11px; color: var(--dim);
+}
+.wrong .side {
+  position: absolute; top: 28px; left: 50%; width: 140px;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px; font-size: 11px;
 }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow">Write-field · 整场 · 2026-09-16</div>
-  <h1>一次写作，同一块现场</h1>
-  <p class="lead">不是八张页面。同一扇窗口从空稿走到隔夜。局部长什么样（短颈、出处、壳有多像 Mosaic）先不锁——先看这一圈有没有断。</p>
-  <div class="reco"><b>要通的是这一圈：</b>打字 → 起疑 → 东西停在旁边 → 再想 → 写进正文 → 现场自己收 → 明天还能接着。</div>
+  <nav class="nav">
+    <a href="一次写作.html" aria-current="page">一次写作</a>
+    <a href="iPad横-写作现场.html">iPad 横 · S1</a>
+    <a href="旁注色.html">旁注色</a>
+    <a href="ai-进行中.html">AI 进行中</a>
+    <a href="锚点 rest-open.html">锚点</a>
+    <a href="派生呈现.html">派生</a>
+  </nav>
+  <div class="eyebrow">Write-field · 整场 · 2026-09-17 · 对照手绘草稿</div>
+  <h1>打开像 Pages：中间一张白纸</h1>
+  <p class="lead">主体写在纸上，<b>往下滚</b>。AI、草稿、资料、求证挂在左右。横向留给周围，不要用来翻页。不是左栏编辑器、右栏检查器，也不是无限画布。</p>
+  <div class="reco"><b>iPad 要快：</b>侧边端口够手指。正在写的这段，周围已经在。没有 hover。没有第二台相机。</div>
+  <div class="key">
+    <div>
+      <h3>纸上 · 主体</h3>
+      <p>稿。线性 markdown。footnote。正在打的字。<b>纵向滚这篇</b>，不横向翻页。</p>
+    </div>
+    <div>
+      <h3>周围 · 临时</h3>
+      <p>AI、草稿、资料、求证。进纸必须手搬。隔夜还在——临时不是扔掉。</p>
+    </div>
+  </div>
+
+  <article class="beat">
+    <header><span class="n">0</span><h2>核心现场</h2></header>
+    <p>打开之后就是这样。中间一张纸，主体在上面；临时内容挂在两侧，接到这段。</p>
+    <div class="stage">
+      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M330 210 C 250 210, 230 118, 168 118" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+        <path d="M750 210 C 830 210, 850 200, 912 200" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+      </svg>
+      <div class="card src" style="left:24px;top:72px">
+        <div class="k">周围 · 资料</div>
+        <div class="t">一句依据</div>
+        <div class="q">还没进正文。</div>
+      </div>
+      <div class="paper">
+        <h3>Let us write something</h3>
+        <div class="p">主体写在这张纸上。</div>
+        <div class="p here">AI 的产物先停在周围。
+          <span class="port l" style="top:118px"></span>
+          <span class="port r" style="top:118px"></span>
+        </div>
+      </div>
+      <div class="card ask" style="right:24px;top:156px">
+        <div class="k">周围 · AI</div>
+        <div class="t">一个问题</div>
+        <div class="q">这段站得住吗？</div>
+      </div>
+    </div>
+  </article>
 
   <article class="beat">
     <header><span class="n">1</span><h2>开题</h2></header>
-    <p>一个 Topic。中央是空的正文。没有点，没有卡。</p>
-    <div class="frame">
-      <div class="chrome"><span class="dot"></span> 减速带<span class="song">♪</span></div>
-      <div class="body">
+    <p>一张在正中的白纸。没有端口，没有卡。开始打字。</p>
+    <div class="stage">
+      <div class="paper">
+        <h3>Let us write something</h3>
         <div class="p here">█</div>
       </div>
     </div>
@@ -114,92 +188,109 @@ h1 { font-size: 28px; line-height: 1.25; margin: 12px 0 14px; font-weight: 600; 
 
   <article class="beat">
     <header><span class="n">2</span><h2>写到起疑</h2></header>
-    <p>第三段写完，不确定。这段还没有卡，gutter 只有把手。拖出去：问，或把一句资料丢进来。</p>
-    <div class="frame">
-      <div class="chrome"><span class="dot"></span> 减速带<span class="song">♪</span></div>
-      <div class="body">
-        <div class="p dim">写作的价值在过程，不在成品。</div>
-        <div class="p dim">AI 是你的读者，不是你的作者。</div>
-        <div class="p here">画布的价值是上下文驻留，而不是空间本身。<span class="handle"></span></div>
+    <p>这段的侧边就是把手。拖出去：问，或把一句资料丢进来。不在字缝里插点。</p>
+    <div class="stage">
+      <div class="paper">
+        <h3>Let us write something</h3>
+        <div class="p">写作的价值在过程，不在成品。</div>
+        <div class="p here">上下文驻留在文章周围，而不是空间本身。<span class="port r" style="top:118px"></span></div>
       </div>
     </div>
   </article>
 
   <article class="beat">
     <header><span class="n">3</span><h2>停在旁边</h2></header>
-    <p>回答或资料出现在这段周围。把手变成 hub。正文还在打，东西没有进字里。</p>
-    <div class="frame">
-      <div class="chrome"><span class="dot"></span> 减速带<span class="song">♪</span></div>
-      <div class="body">
-        <div class="p dim">写作的价值在过程，不在成品。</div>
-        <div class="p dim">AI 是你的读者，不是你的作者。</div>
-        <div class="p here">画布的价值是上下文驻留，而不是空间本身。<span class="mark"></span></div>
+    <p>卡出现在纸的左和右，线接到这段的侧边。正文还在打。草稿：依据偏左，求证偏右——未锁。</p>
+    <div class="stage">
+      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M330 210 C 250 210, 230 118, 168 118" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+        <path d="M750 210 C 830 210, 850 200, 912 200" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+      </svg>
+      <div class="card src" style="left:24px;top:72px">
+        <div class="k">依据</div>
+        <div class="t">Feature reason</div>
+        <div class="q">输出不是终点。</div>
       </div>
-      <div class="card" style="left:48%;top:56px">
-        <div class="k">问题</div>
-        <div class="t">驻留是不是只换了个地方找？</div>
+      <div class="paper">
+        <h3>Let us write something</h3>
+        <div class="p">写作的价值在过程，不在成品。</div>
+        <div class="p here">上下文驻留在文章周围，而不是空间本身。
+          <span class="port l" style="top:118px"></span>
+          <span class="port r" style="top:118px"></span>
+        </div>
       </div>
-      <div class="card" style="left:48%;top:128px">
-        <div class="k">回答</div>
-        <div class="q">如果还要另开页面，就是断的。</div>
+      <div class="card ask" style="right:24px;top:156px">
+        <div class="k">求证</div>
+        <div class="t">Confirm</div>
+        <div class="q">这段站得住吗？</div>
       </div>
     </div>
   </article>
 
   <article class="beat">
     <header><span class="n">4</span><h2>对资料再想</h2></header>
-    <p>旁边的卡上再问、再拆。新卡仍属于这段。从哪张来，要能找回——怎么画跟整场走，这里不锁。</p>
-    <div class="frame">
-      <div class="chrome"><span class="dot"></span> 减速带<span class="song">♪</span></div>
-      <div class="body">
-        <div class="p dim">写作的价值在过程，不在成品。</div>
-        <div class="p dim">AI 是你的读者，不是你的作者。</div>
-        <div class="p here">画布的价值是上下文驻留，而不是空间本身。<span class="mark"></span></div>
+    <p>从左边那张再问。新卡仍挂在这段上，仍在两侧，不另开一张图。</p>
+    <div class="stage">
+      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M330 210 C 250 210, 230 90, 168 90" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+        <path d="M750 210 C 830 210, 850 128, 912 128" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+        <path d="M750 210 C 820 210, 840 280, 912 280" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+      </svg>
+      <div class="card src" style="left:24px;top:48px">
+        <div class="k">依据</div>
+        <div class="t">Feature reason</div>
+        <div class="q">从「Flowise…」</div>
       </div>
-      <div class="card" style="left:46%;top:44px">
-        <div class="k">资料</div>
-        <div class="t">Flowise 的教训</div>
-        <div class="q">输出不是终点。</div>
+      <div class="paper">
+        <h3>Let us write something</h3>
+        <div class="p">写作的价值在过程，不在成品。</div>
+        <div class="p here">上下文驻留在文章周围，而不是空间本身。
+          <span class="port l" style="top:118px"></span>
+          <span class="port r" style="top:118px"></span>
+        </div>
       </div>
-      <div class="card" style="left:70%;top:72px">
-        <div class="k">批注</div>
-        <div class="t">隐藏前提</div>
+      <div class="card ask" style="right:24px;top:88px">
+        <div class="k">问题</div>
+        <div class="t">输出是不是终点？</div>
       </div>
-      <div class="card" style="left:46%;top:140px">
-        <div class="k">回答</div>
-        <div class="q">如果还要另开页面，就是断的。</div>
+      <div class="card ask" style="right:24px;top:236px">
+        <div class="k">求证</div>
+        <div class="t">Confirm</div>
       </div>
     </div>
-    <p class="joint">这一拍容易断成「研究白板」。资料还没挂段，或为了看清关系另开一张图，圈就断了。</p>
+    <p class="joint">卡是手能点到的块，不是 6px 点点开之后才出现的检查器。</p>
   </article>
 
   <article class="beat">
     <header><span class="n">5</span><h2>搬回正文</h2></header>
-    <p>某句要用了：拖进正文变成 footnote，或自己写成自己的句子。卡变为已用。到这里循环才闭合。</p>
-    <div class="frame">
-      <div class="chrome"><span class="dot"></span> 减速带<span class="song">♪</span></div>
-      <div class="body">
-        <div class="p dim">写作的价值在过程，不在成品。</div>
-        <div class="p dim">AI 是你的读者，不是你的作者。</div>
-        <div class="p here">画布的价值是上下文驻留，而不是空间本身。[1]<span class="mark"></span></div>
-      </div>
-      <div class="card flat" style="left:48%;top:88px">
-        <div class="k">资料 · 已用</div>
-        <div class="t">Flowise 的教训</div>
+    <p>写成自己的句子、拖成 footnote，或把图表插入纸上。都是作者点的。卡变扁。循环在这里才闭合。</p>
+    <div class="stage">
+      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M330 210 C 250 210, 230 160, 168 160" fill="none" stroke="var(--wire)" stroke-width="1.75" opacity=".4"/>
+      </svg>
+      <div class="card src flat" style="left:24px;top:120px">
+        <div class="k">依据 · 已用</div>
+        <div class="t">Feature reason</div>
         <div class="q">进了 footnote。</div>
       </div>
+      <div class="paper">
+        <h3>Let us write something</h3>
+        <div class="p">写作的价值在过程，不在成品。</div>
+        <div class="p here">上下文驻留在文章周围，而不是空间本身。[1]
+          <span class="port l" style="top:118px"></span>
+        </div>
+      </div>
     </div>
-    <p class="joint">这一拍现在比「问 AI」薄。没有它，驻留只是堆积。</p>
   </article>
 
   <article class="beat">
     <header><span class="n">6</span><h2>往下写</h2></header>
-    <p>滚到后面的段落。刚才那段的 hub 收成点。不是换房间。</p>
-    <div class="frame">
-      <div class="chrome"><span class="dot"></span> 减速带<span class="song">♪</span></div>
-      <div class="body">
-        <div class="p dim">画布的价值是上下文驻留……<span class="mark solid"></span></div>
-        <div class="p dim">空间布局本身不是产物。</div>
+    <p>滚这篇。刚才那段留下一个侧边端口。新段是空的。不是换房间，也不是缩远。</p>
+    <div class="stage">
+      <div class="paper">
+        <h3>Let us write something</h3>
+        <div class="p">上下文驻留在文章周围……<span class="port r" style="top:52px"></span></div>
+        <div class="p">空间布局本身不是产物。</div>
         <div class="p here">因此判断成立，要看有没有少切一次。█</div>
       </div>
     </div>
@@ -207,31 +298,80 @@ h1 { font-size: 28px; line-height: 1.25; margin: 12px 0 14px; font-weight: 600; 
 
   <article class="beat">
     <header><span class="n">7</span><h2>只想打字</h2></header>
-    <p>专注模式：卡让开，点还在。写完回来，刚才摊开的还在。</p>
-    <div class="frame focus">
-      <div class="chrome"><span class="dot"></span> 减速带<span class="song">♪</span></div>
-      <div class="body">
-        <div class="p dim">因此判断成立，要看有没有少切一次。</div>
-        <div class="p here">手写让我们重新审视自己写过的东西，并在过程中撞出新灵感。█</div>
+    <p>专注：只剩纸。端口还在。回来时，刚才两侧的卡还在。</p>
+    <div class="stage">
+      <div class="paper focus">
+        <h3>Let us write something</h3>
+        <div class="p">因此判断成立，要看有没有少切一次。</div>
+        <div class="p here">手写让我们重新审视自己写过的东西。█</div>
       </div>
     </div>
   </article>
 
   <article class="beat">
     <header><span class="n">8</span><h2>隔夜</h2></header>
-    <p>打开还是这个 Topic。光标、当时摊开的卡、未回答的问题还在。看到的是昨天的现场，不是一篇干净文稿。</p>
-    <div class="frame">
-      <div class="chrome"><span class="dot"></span> 减速带<span class="song">♪</span></div>
-      <div class="body">
-        <div class="p dim">画布的价值是上下文驻留……<span class="mark solid"></span></div>
-        <div class="p here">因此判断成立，要看有没有少切一次。█</div>
+    <p>还是这张纸。光标、当时在两侧的卡、未回答的问题还在。</p>
+    <div class="stage">
+      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M750 180 C 830 180, 850 170, 912 170" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+      </svg>
+      <div class="paper">
+        <h3>Let us write something</h3>
+        <div class="p">上下文驻留在文章周围……</div>
+        <div class="p here">因此判断成立，要看有没有少切一次。█
+          <span class="port r" style="top:118px"></span>
+        </div>
       </div>
-      <div class="card" style="left:48%;top:72px">
+      <div class="card ask" style="right:24px;top:128px">
         <div class="k">待解决</div>
-        <div class="t">驻留是不是只换了个地方找？</div>
+        <div class="t">Confirm</div>
+        <div class="q">这段站得住吗？</div>
       </div>
     </div>
   </article>
+
+  <h2 class="sec">iPad 横是主现场</h2>
+  <p class="lead">竖屏侧边会挤。先把横屏画对：纸在正中，两只手都有东西可点。竖屏未锁。</p>
+  <div class="trio">
+    <div>
+      <div class="stage" style="height:360px">
+        <svg class="wires" viewBox="0 0 1080 360" preserveAspectRatio="none" aria-hidden="true">
+          <path d="M330 180 C 250 180, 230 100, 168 100" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+          <path d="M750 180 C 830 180, 850 170, 912 170" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
+        </svg>
+        <div class="card src" style="left:20px;top:56px"><div class="k">依据</div><div class="t">Feature reason</div></div>
+        <div class="paper" style="top:16px;bottom:16px">
+          <h3>Let us write something</h3>
+          <div class="p here">驻留在文章周围。
+            <span class="port l" style="top:86px"></span>
+            <span class="port r" style="top:86px"></span>
+          </div>
+        </div>
+        <div class="card ask" style="right:20px;top:128px"><div class="k">求证</div><div class="t">Confirm</div></div>
+      </div>
+      <p class="joint">对照手绘：纸是主体，左右是对象，线接到纸边。格子和八角选框不要进产品。</p>
+    </div>
+    <div>
+      <div class="stage pad">
+        <div class="paper" style="width:78%;top:16px;bottom:120px">
+          <h3>Let us write something</h3>
+          <div class="p here">驻留在文章周围。</div>
+        </div>
+        <div class="card ask" style="left:16px;right:16px;width:auto;bottom:16px;top:auto">
+          <div class="k">求证 · 这段</div>
+          <div class="t">Confirm</div>
+        </div>
+      </div>
+      <p class="beat" style="margin:8px 0 0;color:var(--muted);font-size:13px">竖屏草稿：卡暂时贴在纸下缘，仍属于这段，不是工具箱。</p>
+    </div>
+  </div>
+
+  <h2 class="sec">不是这个</h2>
+  <p>左栏编辑器、右栏检查器。那是 IDE，不是 Pages 式的一张纸。周围必须认段落，不能收成一列工具。</p>
+  <div class="wrong">
+    <div class="col">Let us write something<br><br>编辑器分栏。<br>卡是检查器。</div>
+    <div class="side"><b>问题</b><br>点开才看见。</div>
+  </div>
 </div>
 </body>
 </html>

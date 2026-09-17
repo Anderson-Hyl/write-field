@@ -1,5 +1,7 @@
 # swift-flow 取证（2026-09-16）
 
+> **2026-09-17：** 产品形态改为白纸 + 四周，没有第二台相机。本文仍是库证据；**不要再把它当产品画布或 S1。** 架构见 `技术规划 v0.1 · 底座与架构.md` §三。
+
 来源：本地 clone `https://github.com/1amageek/swift-flow`（`/tmp/swift-flow-src`，当时 `main` / 0.21.x），外加 README / CLAUDE.md。不是网传摘要。
 
 ## 身份
@@ -14,7 +16,7 @@
 
 ## 和本产品对齐的地方
 
-1. **边是一等实体。** `FlowEdge` 有稳定 `id`，连的是 `(sourceNodeID, sourceHandleID) → (targetNodeID, targetHandleID)`，可 `Codable`。这正好对着写作画布「每根线一画出来就持久存在」，也正好是 Mosaic「线由 membership 派生、库里没有 edge 行」的反面。
+1. **边是一等实体。** `FlowEdge` 有稳定 `id`，连的是 `(sourceNodeID, sourceHandleID) → (targetNodeID, targetHandleID)`，可 `Codable`。这正好对着写作现场「每根线一画出来就持久存在」，也正好是 Mosaic「线由 membership 派生、库里没有 edge 行」的反面。
 2. **节点可以是任意 SwiftUI view。** `FlowCanvas` 用 `Canvas` + `GraphicsContext` 批量画边，节点走 `resolveSymbol`。
 3. **专门为 WKWebView 这类原生视图做了 LiveNode。** README 原文把 `WKWebView` 列为 `resolveSymbol` 会画成空白/首帧冻结的典型反例；`LiveNode(mount: .persistent)` 把真视图放在 Canvas 上方的 overlay 里，空闲时用快照当海报。`flowDragHandle` 把拖节点的手势收到标题条，避免被 WebView 吃掉。
 4. **视口是值类型。** `Viewport { offset, zoom }`，带 `screenToCanvas` / `canvasToScreen`，可直接塞进我们的 `scenes` 表。

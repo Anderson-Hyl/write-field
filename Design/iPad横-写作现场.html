@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>写作现场 · iPad 横 · S1</title>
+<style>
+:root {
+  --bg: #F2F2F7;
+  --ink: #1C1C1E;
+  --muted: #6C6C70;
+  --line: #D8D8DC;
+  --paper: #FFFFFF;
+  --field: #E8E8ED;
+  --surface: #FFFFFF;
+  --accent: #007AFF;
+  --wire: #AEAEB2;
+  --highlight: #FFF9C4;
+  --bezel: #C7C7CC;
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+}
+.wrap { max-width: 1280px; margin: 0 auto; padding: 32px 24px 80px; }
+.nav { display: flex; gap: 16px; margin-bottom: 20px; font: 500 12px/1 ui-monospace, Menlo, monospace; flex-wrap: wrap; }
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a[aria-current="page"] { color: var(--ink); }
+.eyebrow { font: 500 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: 26px; margin: 10px 0 8px; font-weight: 600; }
+.lead { color: var(--muted); max-width: 48em; margin: 0 0 16px; }
+.reco {
+  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 16px; margin: 0 0 24px; max-width: 52em; font-size: 14px;
+}
+.device {
+  width: 100%; aspect-ratio: 1194 / 834;
+  background: var(--bezel); border-radius: 18px; padding: 10px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.12);
+}
+.screen {
+  position: relative; width: 100%; height: 100%; border-radius: 8px;
+  background: var(--field); overflow: hidden;
+}
+.toolbar {
+  height: 36px; border-bottom: 1px solid var(--line); background: #F7F7F8;
+  display: flex; align-items: center; justify-content: center;
+  font: 600 12px/1 -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  color: var(--ink);
+}
+.paper {
+  position: absolute; left: 50%; top: 52px; bottom: 28px; width: 52%;
+  transform: translateX(-50%);
+  background: var(--paper); border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
+  padding: 40px 44px 32px;
+  font-family: "Iowan Old Style", "Palatino", "Songti SC", "Source Han Serif SC", serif;
+  font-size: clamp(13px, 1.4vw, 17px); line-height: 1.7;
+  overflow: hidden; color: var(--ink);
+}
+.paper h2 { font-size: 1.7em; font-weight: 400; margin: 0 0 .8em; }
+.paper .p { margin: 0 0 .85em; }
+.paper .here { position: relative; }
+.paper .here::before {
+  content: ""; position: absolute; left: -18px; top: 4px; bottom: 4px; width: 2px;
+  background: var(--accent); border-radius: 1px;
+}
+.port {
+  position: absolute; width: 6px; height: 6px; border-radius: 50%;
+  background: var(--accent); top: 50%; transform: translateY(-50%);
+}
+.port.l { left: -3px; }
+.port.r { right: -3px; }
+.card {
+  position: absolute; width: 17%; min-width: 160px; border-radius: 6px;
+  padding: 10px 12px 12px 10px; font-size: 12px; line-height: 1.45;
+  background: #fff; border: 1px solid rgba(0,0,0,.08);
+  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+}
+.card.src { left: 2.8%; top: 28%; box-shadow: inset 2px 0 0 #007AFF, 0 1px 3px rgba(0,0,0,.08); }
+.card.ask { right: 2.8%; top: 42%; box-shadow: inset 2px 0 0 #C47B17, 0 1px 3px rgba(0,0,0,.08); }
+.card .k { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
+.card .t { font-weight: 500; }
+.card .q { margin-top: 4px; color: var(--muted); font-size: 11px; }
+.wires { position: absolute; inset: 36px 0 0; width: 100%; height: calc(100% - 36px); pointer-events: none; }
+.cap { margin-top: 16px; font-size: 13px; color: var(--muted); max-width: 52em; }
+.cap b { color: var(--ink); }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="一次写作.html">一次写作</a>
+    <a href="iPad横-写作现场.html" aria-current="page">iPad 横 · S1</a>
+    <a href="ai-进行中.html">AI 进行中</a>
+    <a href="锚点 rest-open.html">锚点</a>
+    <a href="派生呈现.html">派生</a>
+  </nav>
+  <div class="eyebrow">Write-field · S1 · Pages 文稿观感</div>
+  <h1>白纸，不是知识卡片</h1>
+  <p class="lead">对齐 Pages：窗口是灰底，纸永远是白的，正文是衬线长文。两侧是批注式卡片——白底、细边、系统字体。不要暗色浮块，不要绿紫圆角块，不要节点端口。</p>
+  <div class="reco">S1 第一版的暗底 + 彩色卡是小众写作 app 的路，废弃。工程对齐这一屏。</div>
+  <div class="device">
+    <div class="screen">
+      <div class="toolbar">减速带</div>
+      <svg class="wires" viewBox="0 0 1194 770" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M286 250 C 240 250, 230 230, 180 230" fill="none" stroke="var(--wire)" stroke-width="1"/>
+        <path d="M908 250 C 960 250, 980 310, 1020 310" fill="none" stroke="var(--wire)" stroke-width="1"/>
+      </svg>
+      <div class="card src">
+        <div class="k" style="color:#007AFF">资料</div>
+        <div class="t">Flowise 的教训</div>
+        <div class="q">输出不是终点，是待审阅的对象。</div>
+      </div>
+      <div class="paper">
+        <h2>减速带</h2>
+        <div class="p">写作的价值在过程里。成品只是过程留下的痕迹；真正发生判断的地方，是某一段写完之后，你还敢不敢再看它一眼。</div>
+        <div class="p">AI 是助手，不是主人。它可以读这段、提出疑问、画出一张图，但进不进正文，只能由写的人决定。</div>
+        <div class="here">上下文驻留在文章周围，而不是空间本身。资料和尚未回答的问题如果能停在这段旁边，隔夜打开就不需要再把思路从聊天记录里捞回来。
+          <span class="port l"></span>
+          <span class="port r"></span>
+        </div>
+        <div class="p">因此判断成立，要看有没有少切一次。</div>
+      </div>
+      <div class="card ask">
+        <div class="k" style="color:#C47B17">问题</div>
+        <div class="t">这段的判断站得住吗？</div>
+        <div class="q">先停在旁边，进正文由你决定。</div>
+      </div>
+    </div>
+  </div>
+  <p class="cap"><b>纸保持白色</b>（暗色模式只改窗口底）。卡像 Pages 的批注，不像图谱节点。</p>
+</div>
+</body>
+</html>

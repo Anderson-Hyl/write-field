@@ -3,18 +3,20 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>写作画布 · 派生怎么画</title>
+<title>写作现场 · 派生</title>
 <style>
 :root {
-  --bg: #EEF1F5; --surface: #FFFFFF; --ink: #15191F; --muted: #5B6572;
-  --line: #D3DAE3; --accent: #2D74CC; --accent-soft: #E3EDF9; --wire: #4A5361;
-  --ok: #2F7A3D; --bad: #B23A3A; --paper: #FBFCFD; --wash: #E8EEF6;
+  --bg: #E8E4DC; --ink: #1A1A1A; --muted: #5C574E; --line: #D2CBBE;
+  --paper: #F7F4EE; --field: #EFEBE3; --surface: #FBFAF7;
+  --accent: #2C6BED; --wire: #3A3A3A; --ok: #2F7A3D; --bad: #B23A3A;
+  --src-bg: #D8EDD4; --ask-bg: #F3D6EA;
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg: #0F1216; --surface: #171B21; --ink: #F2F5FA; --muted: #98A2AE;
-    --line: #2A313A; --accent: #5C9BEA; --accent-soft: #1B2A3E; --wire: #98A2AE;
-    --paper: #12161C; --wash: #1B2430;
+    --bg: #12110F; --ink: #F4F1EA; --muted: #A39B8E; --line: #2E2B26;
+    --paper: #1C1B18; --field: #161513; --surface: #22211E;
+    --accent: #6EA0F0; --wire: #C8C2B6;
+    --src-bg: #243328; --ask-bg: #332430;
   }
 }
 * { box-sizing: border-box; }
@@ -23,166 +25,159 @@ body {
   font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
   -webkit-font-smoothing: antialiased;
 }
-.wrap { max-width: 1120px; margin: 0 auto; padding: 40px 24px 96px; }
-.eyebrow {
-  font: 500 11px/1 ui-monospace, "SF Mono", Menlo, monospace;
-  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
-}
-h1 { font-size: 28px; line-height: 1.25; margin: 12px 0 14px; font-weight: 600; text-wrap: balance; }
+.wrap { max-width: 1080px; margin: 0 auto; padding: 36px 24px 96px; }
+.nav { display: flex; gap: 16px; margin-bottom: 24px; font: 500 12px/1 ui-monospace, Menlo, monospace; }
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a[aria-current="page"] { color: var(--ink); }
+.eyebrow { font: 500 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: 28px; line-height: 1.2; margin: 10px 0 12px; font-weight: 600; }
 h2 { font-size: 18px; font-weight: 600; margin: 48px 0 12px; padding-top: 20px; border-top: 1px solid var(--line); }
 p { margin: 0 0 12px; max-width: 46em; }
-.lead { font-size: 17px; line-height: 1.65; color: var(--muted); }
+.lead { font-size: 17px; color: var(--muted); }
 .reco {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 12px;
-  padding: 16px 20px; margin: 16px 0 8px; max-width: 52em;
+  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
+  padding: 16px 20px; margin: 16px 0; max-width: 52em;
 }
 .reco b { color: var(--accent); }
-.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; margin: 20px 0 8px; }
+.grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
 @media (max-width: 960px) { .grid { grid-template-columns: 1fr; } }
-.plate { background: var(--surface); border: 1px solid var(--line); border-radius: 12px; overflow: hidden; }
+.plate { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
 .plate header {
-  display: flex; justify-content: space-between; align-items: baseline;
-  padding: 10px 14px 8px; border-bottom: 1px solid var(--line);
-  font: 500 11px/1.4 ui-monospace, Menlo, monospace;
+  display: flex; justify-content: space-between; padding: 10px 14px;
+  border-bottom: 1px solid var(--line); font: 500 11px/1.4 ui-monospace, Menlo, monospace;
   letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
 }
 .plate header strong { color: var(--ink); letter-spacing: 0; text-transform: none; font-size: 13px; }
-.scene { position: relative; height: 300px; background: var(--paper); }
-.caption { padding: 10px 14px 14px; font-size: 13px; color: var(--muted); min-height: 5.4em; }
-.caption b { color: var(--ink); }
+.scene { position: relative; height: 260px; background: var(--field); }
+.paper {
+  position: absolute; left: 50%; top: 18px; bottom: 18px; width: 36%;
+  transform: translateX(-50%); background: var(--paper); border-radius: 14px;
+  padding: 14px 12px; font-size: 11px; color: var(--muted);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.paper .here { color: var(--ink); margin-top: 8px; }
 .card {
-  position: absolute; width: 148px; background: var(--surface);
-  border: 1px solid var(--line); border-radius: 10px;
-  box-shadow: 0 8px 20px color-mix(in srgb, var(--ink) 8%, transparent);
-  padding: 8px 10px 10px; font-size: 12px; line-height: 1.45;
+  position: absolute; width: 118px; border-radius: 14px; padding: 10px; font-size: 12px;
+  background: var(--src-bg); box-shadow: 0 8px 16px color-mix(in srgb, var(--ink) 10%, transparent);
 }
+.card.ask { background: var(--ask-bg); }
 .card.lit { outline: 2px solid var(--accent); outline-offset: 1px; }
-.card .k {
-  font: 500 10px/1 ui-monospace, Menlo, monospace;
-  letter-spacing: .08em; text-transform: uppercase; color: var(--accent); margin-bottom: 5px;
-}
-.card .t { font-weight: 600; margin-bottom: 3px; }
-.card .q { color: var(--muted); }
+.card .k { font: 600 9px/1 ui-monospace, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; opacity: .7; margin-bottom: 4px; }
+.card .t { font-weight: 650; }
 .from {
-  display: inline-flex; align-items: center; gap: 4px;
-  margin-bottom: 6px; padding: 2px 7px 2px 6px; border-radius: 999px;
-  background: var(--accent-soft); color: var(--accent);
-  font: 500 10px/1.4 ui-monospace, Menlo, monospace; cursor: pointer; border: 0;
+  display: inline-block; margin-bottom: 6px; padding: 2px 7px; border-radius: 999px; border: 0;
+  background: color-mix(in srgb, var(--ink) 8%, transparent); font: 500 10px/1.4 ui-monospace, Menlo, monospace; cursor: pointer;
 }
-.from:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
 .count {
-  position: absolute; right: -6px; top: -6px; min-width: 18px; height: 18px;
-  padding: 0 5px; border-radius: 999px; border: 0; cursor: pointer;
-  background: var(--surface); color: var(--accent);
-  box-shadow: 0 0 0 1px var(--line); font: 600 10px/18px ui-monospace, Menlo, monospace;
+  position: absolute; right: -6px; top: -6px; min-width: 18px; height: 18px; border: 0; border-radius: 999px;
+  background: var(--surface); box-shadow: 0 0 0 1px var(--line); font: 600 10px/18px ui-monospace, Menlo, monospace; cursor: pointer;
 }
-.hub {
-  position: absolute; left: 18px; top: 138px; width: 10px; height: 10px;
-  border-radius: 50%; background: var(--surface); border: 1.5px solid var(--accent);
-}
+.caption { padding: 10px 14px 14px; font-size: 13px; color: var(--muted); min-height: 5.6em; }
 .verdict { font-weight: 600; }
 .verdict.no { color: var(--bad); }
 .verdict.yes { color: var(--ok); }
 .live {
-  position: relative; height: 340px; background: var(--paper);
-  border: 1px solid var(--line); border-radius: 12px; overflow: hidden; margin-top: 8px;
+  position: relative; height: 340px; background: var(--field); border-radius: 16px;
+  overflow: hidden; box-shadow: inset 0 0 0 1px var(--line); margin-top: 8px;
 }
+.live .paper { width: 28%; }
 .live svg { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.note { font-size: 14px; color: var(--muted); max-width: 46em; margin-top: 12px; }
-code { font: 12px ui-monospace, Menlo, monospace; background: var(--accent-soft); padding: 1px 5px; border-radius: 3px; }
+.note { font-size: 14px; color: var(--muted); margin-top: 12px; }
+code { font: 12px ui-monospace, Menlo, monospace; background: color-mix(in srgb, var(--accent) 12%, transparent); padding: 1px 5px; border-radius: 3px; }
 </style>
 </head>
 <body>
 <div class="wrap">
-  <div class="eyebrow">Write-field · 写作现场 · 结构草图 · 2026-09-16</div>
-  <h1>派生是出处，不是第二张关系图</h1>
-  <p class="lead">资料卡上再问、再拆，关系要能看见。箭头不好，把 circuit 常画在卡与卡之间也不好——那会和「这段的 hub」叠成一张网。</p>
-  <div class="reco"><b>默认写在卡上。</b> 新卡一行 <code>从「……」</code>，来源卡一个计数。只有点出处或选中时，才用无箭头的短 circuit 当关系墨水，用完收掉。</div>
+  <nav class="nav">
+    <a href="一次写作.html">一次写作</a>
+    <a href="iPad横-写作现场.html">iPad 横 · S1</a>
+    <a href="ai-进行中.html">AI 进行中</a>
+    <a href="锚点 rest-open.html">锚点</a>
+    <a href="派生呈现.html" aria-current="page">派生</a>
+  </nav>
+  <div class="eyebrow">Write-field · 2026-09-17</div>
+  <h1>派生仍是周围的临时内容</h1>
+  <p class="lead">从一张资料再问，新卡还在这张纸的两侧。关系写在卡上。不要为了看「从哪张来」把纸收掉、换成一张图。</p>
+  <div class="reco"><b>默认写在卡上。</b> <code>从「……」</code> 和来源上的计数。点出处才出短线，用完收掉。</div>
 
   <h2>三种画法</h2>
   <div class="grid">
     <article class="plate">
-      <header><strong>A · 常画线</strong><span>即使没有箭头</span></header>
+      <header><strong>A · 常画网</strong><span>不取</span></header>
       <div class="scene">
-        <svg viewBox="0 0 360 300" width="100%" height="300" aria-hidden="true">
-          <path d="M24 148 L72 92" fill="none" stroke="var(--wire)" stroke-width="1.5"/>
-          <path d="M24 148 L200 92" fill="none" stroke="var(--wire)" stroke-width="1.5"/>
-          <path d="M24 148 L200 188" fill="none" stroke="var(--wire)" stroke-width="1.5"/>
-          <path d="M146 110 L200 110" fill="none" stroke="var(--accent)" stroke-width="1.5" marker-end="url(#arr)"/>
-          <defs><marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8" fill="var(--accent)"/></marker></defs>
+        <svg viewBox="0 0 360 260" width="100%" height="260" aria-hidden="true">
+          <path d="M40 80 L180 130" stroke="var(--wire)" fill="none"/>
+          <path d="M320 80 L180 130" stroke="var(--wire)" fill="none"/>
+          <path d="M320 180 L180 130" stroke="var(--wire)" fill="none"/>
         </svg>
-        <div class="hub"></div>
-        <div class="card" style="left:72px;top:36px"><div class="k">资料</div><div class="t">Flowise 的教训</div></div>
-        <div class="card" style="left:200px;top:36px"><div class="k">问题</div><div class="t">输出是不是终点？</div></div>
-        <div class="card" style="left:200px;top:168px"><div class="k">批注</div><div class="t">隐藏前提</div></div>
+        <div class="card" style="left:8px;top:40px"><div class="k">依据</div><div class="t">Feature reason</div></div>
+        <div class="paper"><div class="here">纸被网吃掉。</div></div>
+        <div class="card ask" style="right:8px;top:40px"><div class="k">问题</div><div class="t">终点？</div></div>
+        <div class="card ask" style="right:8px;top:150px"><div class="k">求证</div><div class="t">Confirm</div></div>
       </div>
-      <p class="caption"><span class="verdict no">不取。</span> Hub 展开线已经在。再加一层卡↔卡，一打开就是网。有没有箭头都一样，箭头只是更像流程图。</p>
+      <p class="caption"><span class="verdict no">不取。</span> 四周变成流程图。纸不再是主体。</p>
     </article>
     <article class="plate">
-      <header><strong>B · 来源再当 hub</strong><span>套娃</span></header>
+      <header><strong>B · 套娃</strong><span>不取</span></header>
       <div class="scene">
-        <div class="hub"></div>
-        <div class="card" style="left:36px;top:88px;width:168px;padding-bottom:14px">
-          <div class="k">资料 · 折叠</div>
-          <div class="t">Flowise 的教训</div>
-          <div class="q" style="margin-top:8px">从它长出 2 张 ↓</div>
-          <div style="margin-top:8px;padding:8px;border:1px dashed var(--line);border-radius:8px;background:var(--wash)">
-            <div class="t">输出是不是终点？</div>
-            <div class="q">隐藏前提</div>
-          </div>
+        <div class="paper"><div class="here">还要回正文。</div></div>
+        <div class="card" style="left:18px;top:70px;width:140px">
+          <div class="k">依据 · 折叠</div>
+          <div class="t">Feature reason</div>
+          <div style="margin-top:8px;padding:8px;border:1px dashed var(--line);border-radius:8px;font-size:11px">Confirm 藏在里面</div>
         </div>
       </div>
-      <p class="caption"><span class="verdict no">不取。</span> 段已经有一层折叠。再给卡做 mini-hub，是第二套房间。写作要回正文，不需要套娃。</p>
+      <p class="caption"><span class="verdict no">不取。</span> 第二套房间。iPad 上更慢。</p>
     </article>
     <article class="plate">
-      <header><strong>C · 出处 + 按需墨水</strong><span>推荐</span></header>
+      <header><strong>C · 出处</strong><span>推荐</span></header>
       <div class="scene">
-        <div class="hub"></div>
-        <div class="card" style="left:36px;top:48px">
+        <div class="card" style="left:8px;top:70px">
           <button class="count" tabindex="-1">2</button>
-          <div class="k">资料</div>
-          <div class="t">Flowise 的教训</div>
-          <div class="q">「输出不是终点。」</div>
+          <div class="k">依据</div>
+          <div class="t">Feature reason</div>
         </div>
-        <div class="card" style="left:196px;top:40px">
-          <button class="from" tabindex="-1">从「Flowise…」</button>
+        <div class="paper"><div class="here">驻留在周围。</div></div>
+        <div class="card ask" style="right:8px;top:40px">
+          <button class="from" tabindex="-1">从「Feature…」</button>
           <div class="k">问题</div>
-          <div class="t">输出是不是终点？</div>
+          <div class="t">终点？</div>
         </div>
-        <div class="card" style="left:196px;top:168px">
-          <button class="from" tabindex="-1">从「Flowise…」</button>
-          <div class="k">批注</div>
-          <div class="t">隐藏前提</div>
+        <div class="card ask" style="right:8px;top:150px">
+          <button class="from" tabindex="-1">从「Feature…」</button>
+          <div class="k">求证</div>
+          <div class="t">Confirm</div>
         </div>
       </div>
-      <p class="caption"><span class="verdict yes">取这个。</span> 派生首先是引用：这张从哪来。空间上出生在来源旁边。线只在点出处时出现。</p>
+      <p class="caption"><span class="verdict yes">取这个。</span> 纸还在正中。派生是引用，不是第二张图。</p>
     </article>
   </div>
 
   <h2>点出处才出墨水</h2>
-  <p>下面可以点问题卡上的出处，或资料卡上的 <code>2</code>。线是临时的，无箭头；再点空白处收掉。</p>
+  <p>点右边卡上的出处，或左边的 <code>2</code>。线是临时的；再点空白收掉。</p>
   <div class="live" id="play">
-    <svg id="ink" viewBox="0 0 800 340" preserveAspectRatio="none"></svg>
-    <div class="hub" style="left:28px;top:160px"></div>
-    <div class="card" id="src" style="left:56px;top:108px">
+    <svg id="ink"></svg>
+    <div class="card" id="src" style="left:20px;top:110px">
       <button class="count" id="cnt" aria-label="展开从这张长出的卡">2</button>
-      <div class="k">资料</div>
-      <div class="t">Flowise 的教训</div>
-      <div class="q">「AI 的输出不是终点，是待审阅的对象。」</div>
+      <div class="k">依据</div>
+      <div class="t">Feature reason</div>
     </div>
-    <div class="card" id="q" style="left:280px;top:48px">
-      <button class="from" id="fromQ">从「Flowise 的教训」</button>
+    <div class="paper">
+      Let us write something
+      <div class="here">上下文驻留在文章周围。</div>
+    </div>
+    <div class="card ask" id="q" style="right:20px;top:36px">
+      <button class="from" id="fromQ">从「Feature reason」</button>
       <div class="k">问题</div>
       <div class="t">输出是不是终点？</div>
-      <div class="q">还是待安置、待吸收的对象。</div>
     </div>
-    <div class="card" id="a" style="left:280px;top:188px">
-      <button class="from" id="fromA">从「Flowise 的教训」</button>
-      <div class="k">批注 · 隐藏前提</div>
-      <div class="t">你默认「输出有终点」</div>
+    <div class="card ask" id="a" style="right:20px;top:190px">
+      <button class="from" id="fromA">从「Feature reason」</button>
+      <div class="k">求证</div>
+      <div class="t">Confirm</div>
     </div>
   </div>
-  <p class="note">Hub 到三张卡的 membership 线，只在点开这段时画（上一张板）。这张板故意不画它，免得和派生墨水抢。两套线不要同时当常驻几何。</p>
+  <p class="note">纸到卡的归属线（侧边 → 卡）只在这段打开时画，见上一张板。不要两套线同时常驻。更不要收起纸。</p>
 </div>
 <script>
 const play = document.getElementById('play');
@@ -191,55 +186,32 @@ const src = document.getElementById('src');
 const q = document.getElementById('q');
 const a = document.getElementById('a');
 let mode = null;
-
 function pt(el, side) {
   const r = play.getBoundingClientRect();
   const b = el.getBoundingClientRect();
-  const y = b.top - r.top + b.height / 2;
-  const x = side === 'right' ? b.right - r.left : b.left - r.left;
-  return { x, y };
+  return { x: (side === 'right' ? b.right : b.left) - r.left, y: b.top - r.top + b.height / 2 };
 }
-function circuit(from, to) {
-  const neck = 14;
-  const n = { x: from.x + neck, y: from.y };
-  const e = { x: to.x - neck, y: to.y };
-  const mid = Math.round((n.x + e.x) / 2);
-  const s = Math.sign(e.y - n.y) || 1;
-  const rad = 12;
-  return `M${from.x} ${from.y} L${n.x} ${n.y}
-    L${mid - rad} ${n.y} Q${mid} ${n.y} ${mid} ${n.y + s * rad}
-    L${mid} ${e.y - s * rad} Q${mid} ${e.y} ${mid + rad} ${e.y}
-    L${e.x} ${e.y} L${to.x} ${to.y}`;
+function curve(from, to) {
+  const mx = (from.x + to.x) / 2;
+  return `M${from.x} ${from.y} C ${mx} ${from.y}, ${mx} ${to.y}, ${to.x} ${to.y}`;
 }
 function clear() {
-  mode = null;
-  ink.innerHTML = '';
+  mode = null; ink.innerHTML = '';
   [src, q, a].forEach((el) => el.classList.remove('lit'));
 }
 function draw(targets) {
   const f = pt(src, 'right');
+  ink.setAttribute('viewBox', `0 0 ${play.clientWidth} ${play.clientHeight}`);
   ink.innerHTML = targets.map((el) => {
     const t = pt(el, 'left');
-    return `<path d="${circuit(f, t)}" fill="none" stroke="var(--wire)" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>`;
+    return `<path d="${curve(f, t)}" fill="none" stroke="var(--wire)" stroke-width="1.5"/>`;
   }).join('');
   src.classList.add('lit');
   targets.forEach((el) => el.classList.add('lit'));
 }
-document.getElementById('fromQ').addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (mode === 'q') { clear(); return; }
-  clear(); mode = 'q'; draw([q]);
-});
-document.getElementById('fromA').addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (mode === 'a') { clear(); return; }
-  clear(); mode = 'a'; draw([a]);
-});
-document.getElementById('cnt').addEventListener('click', (e) => {
-  e.stopPropagation();
-  if (mode === 'all') { clear(); return; }
-  clear(); mode = 'all'; draw([q, a]);
-});
+document.getElementById('fromQ').onclick = (e) => { e.stopPropagation(); if (mode === 'q') { clear(); return; } clear(); mode = 'q'; draw([q]); };
+document.getElementById('fromA').onclick = (e) => { e.stopPropagation(); if (mode === 'a') { clear(); return; } clear(); mode = 'a'; draw([a]); };
+document.getElementById('cnt').onclick = (e) => { e.stopPropagation(); if (mode === 'all') { clear(); return; } clear(); mode = 'all'; draw([q, a]); };
 play.addEventListener('click', clear);
 window.addEventListener('resize', () => { if (mode === 'q') draw([q]); else if (mode === 'a') draw([a]); else if (mode === 'all') draw([q, a]); });
 </script>

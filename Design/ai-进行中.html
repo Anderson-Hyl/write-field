@@ -1,0 +1,129 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>写作现场 · AI 进行中</title>
+<style>
+:root {
+  --bg: #E8E4DC; --ink: #1A1A1A; --muted: #5C574E; --line: #D2CBBE;
+  --paper: #F7F4EE; --field: #EFEBE3; --surface: #FBFAF7;
+  --wire: #3A3A3A; --dim: #8A8478; --ask-bg: #F3D6EA; --bad: #B23A3A;
+  --ai1: #0894FF; --ai2: #C959DD; --ai3: #FF2E54; --ai4: #FF9004;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #12110F; --ink: #F4F1EA; --muted: #A39B8E; --line: #2E2B26;
+    --paper: #1C1B18; --field: #161513; --surface: #22211E;
+    --wire: #C8C2B6; --dim: #7A7468; --ask-bg: #332430;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+}
+.wrap { max-width: 1100px; margin: 0 auto; padding: 32px 24px 80px; }
+.nav { display: flex; gap: 16px; margin-bottom: 20px; font: 500 12px/1 ui-monospace, Menlo, monospace; flex-wrap: wrap; }
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a[aria-current="page"] { color: var(--ink); }
+.eyebrow { font: 500 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: 26px; margin: 10px 0 8px; font-weight: 600; }
+.lead { color: var(--muted); max-width: 46em; }
+.grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; margin-top: 22px; }
+@media (max-width: 800px) { .grid { grid-template-columns: 1fr; } }
+.plate { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; overflow: hidden; }
+.plate header {
+  display: flex; justify-content: space-between; padding: 10px 14px;
+  border-bottom: 1px solid var(--line); font: 500 11px/1 ui-monospace, Menlo, monospace;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+}
+.plate header strong { color: var(--ink); letter-spacing: 0; text-transform: none; font-size: 13px; }
+.scene { position: relative; height: 220px; background: var(--field); }
+.paper {
+  position: absolute; left: 50%; top: 16px; bottom: 16px; width: 42%;
+  transform: translateX(-50%); background: var(--paper); border-radius: 14px;
+  padding: 14px 12px; font-size: 12px; color: var(--dim);
+  box-shadow: 0 8px 20px color-mix(in srgb, var(--ink) 10%, transparent);
+}
+.paper .here { color: var(--ink); margin-top: 8px; }
+.wrong .paper {
+  box-shadow: 0 0 0 2px var(--ai1), 0 0 18px var(--ai2);
+}
+.card {
+  position: absolute; right: 10px; top: 58px; width: 124px; border-radius: 14px;
+  padding: 10px; font-size: 12px; background: var(--ask-bg);
+}
+.glow {
+  background:
+    linear-gradient(var(--ask-bg), var(--ask-bg)) padding-box,
+    conic-gradient(from 40deg, var(--ai1), var(--ai2), var(--ai3), var(--ai4), var(--ai1)) border-box;
+  border: 2px solid transparent;
+  box-shadow: 0 0 16px color-mix(in srgb, var(--ai2) 45%, transparent);
+}
+.orb {
+  position: absolute; right: 36px; top: 84px; width: 36px; height: 36px; border-radius: 50%;
+  background: conic-gradient(from 20deg, var(--ai1), var(--ai2), var(--ai4), var(--ai1));
+  filter: blur(.2px);
+  box-shadow: 0 0 18px color-mix(in srgb, var(--ai1) 50%, transparent);
+}
+.caption { padding: 10px 14px 14px; font-size: 13px; color: var(--muted); min-height: 4.2em; }
+.caption b { color: var(--ink); }
+.no { color: var(--bad); font-weight: 600; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="一次写作.html">一次写作</a>
+    <a href="iPad横-写作现场.html">iPad 横 · S1</a>
+    <a href="ai-进行中.html" aria-current="page">AI 进行中</a>
+    <a href="锚点 rest-open.html">锚点</a>
+    <a href="派生呈现.html">派生</a>
+  </nav>
+  <div class="eyebrow">Write-field · S6 视觉 · 不是 S1</div>
+  <h1>光包住正在长出来的卡，不要包住纸</h1>
+  <p class="lead">Apple Intelligence Glow 用在周围；气泡是侧边先出现的一颗球，再展开成卡。正文发光 = Writing Tools 改正文，禁止。</p>
+  <div class="grid">
+    <article class="plate">
+      <header><strong>安静</strong><span>写字</span></header>
+      <div class="scene">
+        <div class="paper">Let us write something<div class="here">主体在纸上。</div></div>
+      </div>
+      <p class="caption"><b>没有光，没有球。</b> 安静是生存条件。</p>
+    </article>
+    <article class="plate">
+      <header><strong>思考</strong><span>runtime</span></header>
+      <div class="scene">
+        <div class="paper">Let us write something<div class="here">主体在纸上。</div></div>
+        <div class="orb" title="进行中"></div>
+      </div>
+      <p class="caption"><b>侧边一颗球。</b> 问已经发出，卡还没落地。不入库。</p>
+    </article>
+    <article class="plate">
+      <header><strong>流式</strong><span>长成卡</span></header>
+      <div class="scene">
+        <div class="paper">Let us write something<div class="here">主体在纸上。</div></div>
+        <div class="card glow">这段站得住吗？</div>
+      </div>
+      <p class="caption"><b>Glow 只绕这张卡。</b> 虹彩在边上转。纸仍然是纸。</p>
+    </article>
+    <article class="plate">
+      <header><strong>落地</strong><span>光熄</span></header>
+      <div class="scene">
+        <div class="paper">Let us write something<div class="here">主体在纸上。</div></div>
+        <div class="card">这段站得住吗？<div style="opacity:.7;margin-top:4px">产物停在旁边。</div></div>
+      </div>
+      <p class="caption"><b>普通卡。</b> 之后走玻璃材质（§3.8），不再转虹彩。</p>
+    </article>
+  </div>
+  <article class="plate" style="margin-top:14px">
+    <header><strong>不要</strong><span>Writing Tools</span></header>
+    <div class="scene wrong">
+      <div class="paper">Let us write something<div class="here">主体在纸上。</div></div>
+    </div>
+    <p class="caption"><span class="no">禁止。</span> 纸或选区套 Glow，看起来就是系统在改这段。本产品没有 `body.replace`，视觉上也不能像。</p>
+  </article>
+</div>
+</body>
+</html>
