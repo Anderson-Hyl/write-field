@@ -6,87 +6,212 @@
 <title>写作现场 · iPad 横 · S1</title>
 <style>
 :root {
-  --bg: #F2F2F7;
+  --bg: #ECECF1;
   --ink: #1C1C1E;
   --muted: #6C6C70;
   --line: #D8D8DC;
   --paper: #FFFFFF;
-  --field: #E8E8ED;
-  --surface: #FFFFFF;
-  --accent: #007AFF;
-  --wire: #AEAEB2;
-  --highlight: #FFF9C4;
-  --bezel: #C7C7CC;
+  --desk: #C5C5CD;
+  --bezel: #B4B4BC;
+  --src: #007AFF;
+  --src-ink: #0055C8;
+  --open: #C47B17;
+  --open-ink: #8A5410;
+  --assist: #5B7C8A;
+  --assist-ink: #3E5C68;
+  --tension: #C4474A;
+  --tension-ink: #8F2F32;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #1C1C1E;
+    --ink: #F2F2F7;
+    --muted: #8E8E93;
+    --line: #3A3A3C;
+    --desk: #2A2A2E;
+    --bezel: #3A3A3C;
+  }
 }
 * { box-sizing: border-box; }
+html, body { margin: 0; }
 body {
-  margin: 0; background: var(--bg); color: var(--ink);
-  font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
 }
-.wrap { max-width: 1280px; margin: 0 auto; padding: 32px 24px 80px; }
-.nav { display: flex; gap: 16px; margin-bottom: 20px; font: 500 12px/1 ui-monospace, Menlo, monospace; flex-wrap: wrap; }
+.wrap { max-width: 1280px; margin: 0 auto; padding: 28px 24px 96px; }
+.nav {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px;
+  font: 500 12px/1 ui-monospace, Menlo, monospace;
+}
 .nav a { color: var(--muted); text-decoration: none; }
 .nav a[aria-current="page"] { color: var(--ink); }
-.eyebrow { font: 500 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-h1 { font-size: 26px; margin: 10px 0 8px; font-weight: 600; }
-.lead { color: var(--muted); max-width: 48em; margin: 0 0 16px; }
-.reco {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 10px;
-  padding: 12px 16px; margin: 0 0 24px; max-width: 52em; font-size: 14px;
+.eyebrow {
+  font: 500 11px/1 ui-monospace, Menlo, monospace;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
 }
+h1 { font-size: 26px; font-weight: 600; margin: 10px 0 8px; }
+.lead { color: var(--muted); max-width: 46em; margin: 0 0 12px; }
+.reco {
+  background: #fff; color: #1C1C1E; border: 1px solid var(--line);
+  border-radius: 10px; padding: 12px 16px; margin: 0 0 16px; max-width: 52em; font-size: 14px;
+}
+.how { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.how button {
+  font: 500 13px/1 -apple-system, "PingFang SC", sans-serif;
+  border-radius: 8px; border: 1px solid var(--line);
+  background: #fff; color: #1C1C1E; padding: 8px 12px;
+  cursor: pointer; min-height: 44px;
+}
+.stage { width: 100%; max-width: 1194px; }
 .device {
-  width: 100%; aspect-ratio: 1194 / 834;
-  background: var(--bezel); border-radius: 18px; padding: 10px;
-  box-shadow: 0 12px 32px rgba(0,0,0,.12);
+  position: relative; width: 100%; aspect-ratio: 1194 / 834;
+  background: var(--bezel); border-radius: 22px; padding: 10px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.14);
 }
 .screen {
-  position: relative; width: 100%; height: 100%; border-radius: 8px;
-  background: var(--field); overflow: hidden;
+  position: relative; width: 1194px; height: 834px;
+  border-radius: 12px; overflow: hidden; background: var(--desk);
+  transform-origin: top left; touch-action: none;
 }
-.toolbar {
-  height: 36px; border-bottom: 1px solid var(--line); background: #F7F7F8;
-  display: flex; align-items: center; justify-content: center;
-  font: 600 12px/1 -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
-  color: var(--ink);
-}
+.field { position: absolute; inset: 0; }
+.wires { z-index: 0; }
+.paper { z-index: 1; }
+.card { z-index: 2; }
+.gutter { z-index: 3; }
 .paper {
-  position: absolute; left: 50%; top: 52px; bottom: 28px; width: 52%;
+  position: absolute; left: 50%; top: 36px; bottom: 36px; width: 560px;
   transform: translateX(-50%);
-  background: var(--paper); border-radius: 2px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
-  padding: 40px 44px 32px;
-  font-family: "Iowan Old Style", "Palatino", "Songti SC", "Source Han Serif SC", serif;
-  font-size: clamp(13px, 1.4vw, 17px); line-height: 1.7;
-  overflow: hidden; color: var(--ink);
+  background: var(--paper); color: #1C1C1E; border-radius: 2px;
+  box-shadow:
+    0 1px 0 rgba(255,255,255,.8) inset,
+    0 1px 2px rgba(0,0,0,.06),
+    0 28px 64px rgba(0,0,0,.12);
+  padding: 52px 52px 64px;
+  overflow-y: auto; overflow-x: hidden;
+  overscroll-behavior: contain; touch-action: pan-y;
+  font-family: "New York", "Iowan Old Style", Palatino, "Songti SC", "Source Han Serif SC", serif;
+  font-size: 17px; line-height: 28px; letter-spacing: -0.004em;
+  -webkit-overflow-scrolling: touch;
 }
-.paper h2 { font-size: 1.7em; font-weight: 400; margin: 0 0 .8em; }
-.paper .p { margin: 0 0 .85em; }
+.paper:focus { outline: none; }
+.paper:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, #007AFF 40%, transparent); }
+.paper h2 {
+  font-size: 34px; font-weight: 400; line-height: 40px;
+  margin: 0 0 28px; letter-spacing: .01em;
+}
+.paper p { margin: 0 0 22px; }
 .paper .here { position: relative; }
 .paper .here::before {
-  content: ""; position: absolute; left: -18px; top: 4px; bottom: 4px; width: 2px;
-  background: var(--accent); border-radius: 1px;
+  content: "";
+  position: absolute; left: -26px; top: 6px; bottom: 6px; width: 1px;
+  background: #1C1C1E; opacity: .28;
 }
-.port {
-  position: absolute; width: 6px; height: 6px; border-radius: 50%;
-  background: var(--accent); top: 50%; transform: translateY(-50%);
+.folio {
+  position: sticky; bottom: -64px; margin-top: 48px;
+  text-align: center; font-size: 12px; letter-spacing: .18em;
+  color: #8E8E93; font-family: "New York", Palatino, serif;
 }
-.port.l { left: -3px; }
-.port.r { right: -3px; }
 .card {
-  position: absolute; width: 17%; min-width: 160px; border-radius: 6px;
-  padding: 10px 12px 12px 10px; font-size: 12px; line-height: 1.45;
-  background: #fff; border: 1px solid rgba(0,0,0,.08);
-  box-shadow: 0 1px 3px rgba(0,0,0,.08);
+  position: absolute; width: 236px; min-height: 44px;
+  display: flex; gap: 8px; align-items: flex-start; text-align: left;
+  background: #fff; color: #1C1C1E;
+  border: 1px solid rgba(28,28,30,.10);
+  border-radius: 4px; padding: 11px 12px 12px;
   font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  font-size: 15px; line-height: 20px; cursor: pointer;
+  box-shadow: 0 1px 1px rgba(0,0,0,.04), 0 10px 28px rgba(0,0,0,.06);
 }
-.card.src { left: 2.8%; top: 28%; }
-.card.ask { right: 2.8%; top: 42%; box-shadow: 0 0 0 1px color-mix(in srgb, #C47B17 35%, transparent), 0 8px 18px color-mix(in srgb, #C47B17 18%, transparent); }
-.card .k { font-size: 11px; color: var(--muted); margin-bottom: 4px; }
-.card .t { font-weight: 500; }
-.card .q { margin-top: 4px; color: var(--muted); font-size: 11px; }
-.wires { position: absolute; inset: 36px 0 0; width: 100%; height: calc(100% - 36px); pointer-events: none; }
-.cap { margin-top: 16px; font-size: 13px; color: var(--muted); max-width: 52em; }
+.card:focus { outline: none; }
+.card:focus-visible { box-shadow: 0 0 0 3px color-mix(in srgb, #007AFF 40%, transparent); }
+.card .glyph { width: 18px; height: 18px; flex: none; margin-top: 2px; }
+.card .k { font-size: 12px; font-weight: 600; line-height: 16px; margin-bottom: 2px; }
+.card .t { font-weight: 500; font-size: 15px; line-height: 20px; color: #1C1C1E; }
+.card .q { margin-top: 4px; color: #6C6C70; font-size: 13px; line-height: 18px; }
+.card .from { margin-top: 6px; font-size: 12px; color: #8E8E93; }
+.card .mini {
+  margin-top: 8px; width: 100%; border: 1px solid rgba(28,28,30,.08);
+  border-radius: 3px; padding: 6px 8px; font-size: 11px; line-height: 16px; color: #3E5C68;
+}
+.card[data-kind="source"] .glyph { color: var(--src); }
+.card[data-kind="source"] .k { color: var(--src-ink); }
+.card[data-kind="open"] .glyph { color: var(--open); }
+.card[data-kind="open"] .k { color: var(--open-ink); }
+.card[data-kind="assist"] .glyph { color: var(--assist); }
+.card[data-kind="assist"] .k { color: var(--assist-ink); }
+.card[data-kind="tension"] .glyph { color: var(--tension); }
+.card[data-kind="tension"] .k { color: var(--tension-ink); }
+.card.is-on[data-kind="source"] {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--src) 38%, transparent),
+    0 12px 28px color-mix(in srgb, var(--src) 16%, transparent);
+}
+.card.is-on[data-kind="open"] {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--open) 38%, transparent),
+    0 12px 28px color-mix(in srgb, var(--open) 16%, transparent);
+}
+.card.is-on[data-kind="assist"] {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--assist) 38%, transparent),
+    0 12px 28px color-mix(in srgb, var(--assist) 16%, transparent);
+}
+.card.is-on[data-kind="tension"] {
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--tension) 38%, transparent),
+    0 12px 28px color-mix(in srgb, var(--tension) 16%, transparent);
+}
+.card.is-used { padding: 8px 10px; box-shadow: 0 1px 2px rgba(0,0,0,.05); opacity: .9; }
+.card.is-used .q { display: none; }
+.card.is-discarded { opacity: .42; }
+.card.is-loose { box-shadow: none; }
+.card.is-forming { isolation: isolate; overflow: visible; background: #fff; }
+.card.is-forming .glow {
+  position: absolute; inset: -2px; z-index: -1; border-radius: 6px;
+  background: conic-gradient(from 0deg, #6EA8FF, #C9A0FF, #FF8F7A, #E8B85A, #6EA8FF);
+  animation: turn 4s linear infinite;
+}
+@keyframes turn { to { transform: rotate(360deg); } }
+@media (prefers-reduced-motion: reduce) {
+  .card.is-forming .glow { animation: none; opacity: .35; }
+}
+.scene.is-away .card[data-pid] {
+  width: 44px; height: 44px; min-height: 44px; padding: 13px;
+  border-radius: 22px; overflow: hidden;
+}
+.scene.is-away .card[data-pid] .copy { display: none; }
+.gutter {
+  position: absolute; width: 44px; height: 44px; padding: 0; border: 0;
+  background: none; cursor: pointer; display: grid; place-items: center;
+}
+.gutter i {
+  width: 9px; height: 9px; border-radius: 50%;
+  background: #fff; box-shadow: 0 0 0 1.5px #1C1C1E;
+}
+.gutter[data-kind="source"] i { box-shadow: 0 0 0 1.5px var(--src); }
+.gutter[data-kind="open"] i { box-shadow: 0 0 0 1.5px var(--open); }
+.gutter[hidden] { display: none; }
+.wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
+.cap { margin-top: 14px; font-size: 13px; color: var(--muted); max-width: 52em; }
 .cap b { color: var(--ink); }
+#live { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); }
+.forms { margin-top: 36px; max-width: 1194px; }
+.forms h2 { font-size: 18px; margin: 0 0 8px; }
+.forms p { color: var(--muted); max-width: 46em; margin: 0 0 16px; }
+.grid {
+  display: grid; grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 12px;
+}
+.grid .card { position: relative; width: auto; }
+.grid .lab {
+  font: 500 11px/1 ui-monospace, Menlo, monospace;
+  letter-spacing: .06em; text-transform: uppercase; color: var(--muted);
+  margin: 0 0 8px;
+}
+body.live .wrap > :not(.stage) { display: none; }
+body.live .wrap { max-width: none; padding: 0; }
+body.live .stage { max-width: none; }
+body.live .device {
+  width: 100vw; height: 100dvh; max-width: none;
+  aspect-ratio: auto; border-radius: 0; padding: 0; box-shadow: none;
+}
+body.live .screen { border-radius: 0; }
 </style>
 </head>
 <body>
@@ -99,40 +224,317 @@ h1 { font-size: 26px; margin: 10px 0 8px; font-weight: 600; }
     <a href="锚点 rest-open.html">锚点</a>
     <a href="派生呈现.html">派生</a>
   </nav>
-  <div class="eyebrow">Write-field · S1 · Pages 文稿观感</div>
-  <h1>白纸，不是知识卡片</h1>
-  <p class="lead">对齐 Pages：窗口是灰底，纸永远是白的，正文是衬线长文。两侧是批注式卡片——白底、细边、系统字体。不要暗色浮块，不要绿紫圆角块，不要节点端口。</p>
-  <div class="reco">S1 第一版的暗底 + 彩色卡是小众写作 app 的路，废弃。工程对齐这一屏。</div>
-  <div class="device">
-    <div class="screen">
-      <div class="toolbar">减速带</div>
-      <svg class="wires" viewBox="0 0 1194 770" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M286 250 C 240 250, 230 230, 180 230" fill="none" stroke="#007AFF" stroke-opacity=".55" stroke-width="1.25"/>
-        <path d="M908 250 C 960 250, 980 310, 1020 310" fill="none" stroke="#C47B17" stroke-opacity=".55" stroke-width="1.25"/>
-      </svg>
-      <div class="card src">
-        <div class="k" style="color:#007AFF">资料</div>
-        <div class="t">Flowise 的教训</div>
-        <div class="q">输出不是终点，是待审阅的对象。</div>
-      </div>
-      <div class="paper">
-        <h2>减速带</h2>
-        <div class="p">写作的价值在过程里。成品只是过程留下的痕迹；真正发生判断的地方，是某一段写完之后，你还敢不敢再看它一眼。</div>
-        <div class="p">AI 是助手，不是主人。它可以读这段、提出疑问、画出一张图，但进不进正文，只能由写的人决定。</div>
-        <div class="here">上下文驻留在文章周围，而不是空间本身。资料和尚未回答的问题如果能停在这段旁边，隔夜打开就不需要再把思路从聊天记录里捞回来。
-          <span class="port l"></span>
-          <span class="port r"></span>
+  <div class="eyebrow">Write-field · S1 · 桌上的一页稿</div>
+  <h1>旁注是页边的思考，不是设置项</h1>
+  <p class="lead">四种角色都在当前这段旁边。上一句只留端口；点端口就换成那一段。纸永远白，种类只在符号、caption 和线上。</p>
+  <div class="reco">滚纸。点卡。点上一句左侧的端口，看静默 / 打开。下面的标本补齐已用、废弃、未挂段、进行中——后两件标了未锁或后置。</div>
+  <div class="how">
+    <button type="button" id="enter-live">按现场尺寸打开</button>
+  </div>
+  <div class="stage">
+    <div class="device">
+      <div class="screen" id="screen" role="application" aria-label="写作现场，iPad 横向">
+        <div class="field scene" id="scene">
+          <svg class="wires" id="wires" viewBox="0 0 1194 834" preserveAspectRatio="none" aria-hidden="true"></svg>
+          <button type="button" class="gutter" id="port-used" data-pid="used" data-side="right" data-kind="source" aria-label="打开上一句的旁注" hidden><i></i></button>
+          <button type="button" class="gutter" id="port-now" data-pid="now" data-side="right" data-kind="open" aria-label="回到正在写的这段" hidden><i></i></button>
+
+          <button type="button" class="card is-used" data-pid="used" data-kind="source" data-side="left" aria-pressed="false" aria-label="已用资料卡">
+            <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5.5h5.2c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7H4V5.5zm7.3 0H16.5c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7h-3.9V5.5z" fill="currentColor"/></svg>
+            <div class="copy">
+              <div class="k">资料 · 已用</div>
+              <div class="t">Pages 打开就是纸</div>
+              <div class="q">已经写进上一句。</div>
+            </div>
+          </button>
+
+          <button type="button" class="card" data-pid="now" data-kind="source" data-side="left" aria-pressed="false" aria-label="资料卡，Flowise">
+            <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5.5h5.2c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7H4V5.5zm7.3 0H16.5c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7h-3.9V5.5z" fill="currentColor"/></svg>
+            <div class="copy">
+              <div class="k">资料</div>
+              <div class="t">Flowise 的教训</div>
+              <div class="q">输出不是终点，是待审阅的对象。</div>
+            </div>
+          </button>
+
+          <button type="button" class="card is-on" data-pid="now" data-kind="tension" data-side="left" aria-pressed="true" aria-label="张力卡">
+            <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M10 6.4v4.6" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="13.6" r=".85" fill="currentColor"/></svg>
+            <div class="copy">
+              <div class="k">张力</div>
+              <div class="t">周围会不会变成新的待收拾平面？</div>
+              <div class="q">不是判假。是这段最不想面对的反问。</div>
+            </div>
+          </button>
+
+          <article class="paper" id="paper" tabindex="0" aria-label="文稿，减速带">
+            <h2>减速带</h2>
+            <p>写作的价值在过程里。成品只是过程留下的痕迹；真正发生判断的地方，是某一段写完之后，你还敢不敢再看它一眼。手写让我们重新审视自己写过的东西，并在过程中撞出新灵感。</p>
+            <p>单位仍叫一篇 Topic。换一篇就是换一张纸和它四周的卡。文稿列表可以以后出现在壳里，但那不是写作现场。</p>
+            <p>打开之后应当像 Pages：中间一张白纸，稿在上面。没有点阵，没有可平移的宇宙，也没有左栏编辑器配右栏检查器。</p>
+            <p>AI 是助手，不是主人。它可以读这段、提出疑问、画出一张图，但进不进正文，只能由写的人决定。</p>
+            <p>因此周围不是一块用来整理漂亮结构的白板。它只需要让资料、尚未回答的问题、一次反驳，还能在隔夜打开时待在这段旁边。</p>
+            <p>复杂写作会不断产生两类上下文。一类是信息：网页、论文、旧文章。一类是思考：我为什么怀疑这一段、为什么放弃过一条路。</p>
+            <p data-pid="used">传统工具把这些分散在浏览器标签、聊天记录和脑内短期记忆里。每次切换都要重新回忆「我为什么来到这里」。</p>
+            <p class="here" id="here" data-pid="now">上下文驻留在文章周围，而不是空间本身。资料和尚未回答的问题如果能停在这段旁边，隔夜打开就不需要再把思路从聊天记录里捞回来。</p>
+            <p>判断成立，要看有没有少切一次：少去翻浏览器，少去翻聊天，少问自己刚才为什么打开这个。</p>
+            <p>往下写的时候，只有这篇在滚。刚才那段的卡收起，侧边留下一个端口。不是换房间。</p>
+            <p>搬回正文才算闭合：自己写成句子，或把图表插入纸上。卡变为已用。插入是作者点的。</p>
+            <p>不要为了摆卡引入第二台相机。窗口底不是世界平面。正文永远是线性的，写在正中那张纸上。</p>
+            <div class="folio">3</div>
+          </article>
+
+          <button type="button" class="card" data-pid="now" data-kind="open" data-side="right" aria-pressed="false" aria-label="待决卡">
+            <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7.8 7.6c.3-1.3 1.3-2 2.3-2s2.2.8 2.2 2.1c0 1.1-.6 1.6-1.4 2.2-.7.5-.9.9-.9 1.6v.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="14.4" r=".9" fill="currentColor"/></svg>
+            <div class="copy">
+              <div class="k">待决</div>
+              <div class="t">驻留如果只是堆积，第 5 拍在哪？</div>
+              <div class="q">先停在旁边。还没有结论。</div>
+            </div>
+          </button>
+
+          <button type="button" class="card" data-pid="now" data-kind="assist" data-side="right" aria-pressed="false" aria-label="助手产出卡">
+            <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2.2 1.8"/></svg>
+            <div class="copy">
+              <div class="k">助手产出</div>
+              <div class="t">可插入的一拍</div>
+              <div class="from">从「驻留如果只是堆积…」</div>
+              <div class="mini">开题 → 起疑 → 停在旁边<br>再想 → 搬回正文 → 往下写</div>
+            </div>
+          </button>
         </div>
-        <div class="p">因此判断成立，要看有没有少切一次。</div>
-      </div>
-      <div class="card ask">
-        <div class="k" style="color:#C47B17">问题</div>
-        <div class="t">这段的判断站得住吗？</div>
-        <div class="q">先停在旁边，进正文由你决定。</div>
       </div>
     </div>
   </div>
-  <p class="cap"><b>纸保持白色</b>（暗色模式只改窗口底）。卡像 Pages 的批注，不像图谱节点。</p>
+  <p class="cap" id="hint"><b>纸是最亮的那一块。</b></p>
+  <div id="live" aria-live="polite"></div>
+
+  <section class="forms">
+    <h2>同一套语言里的其它形式</h2>
+    <p>现场里已经有四种角色、当前段打开、上一句端口、派生、选中。下面补工程里有、但不宜同时摊在一段上的状态。未挂段和进行中分别是【待定】关节和 S6。</p>
+    <div class="grid">
+      <div>
+        <div class="lab">已用 · 更扁</div>
+        <div class="card is-used" data-kind="source">
+          <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5.5h5.2c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7H4V5.5zm7.3 0H16.5c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7h-3.9V5.5z" fill="currentColor"/></svg>
+          <div class="copy"><div class="k">资料 · 已用</div><div class="t">Pages 打开就是纸</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="lab">废弃 · 仍在，变淡</div>
+        <div class="card is-discarded" data-kind="open">
+          <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><circle cx="10" cy="10" r="7.2" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M7.8 7.6c.3-1.3 1.3-2 2.3-2s2.2.8 2.2 2.1c0 1.1-.6 1.6-1.4 2.2-.7.5-.9.9-.9 1.6v.2" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/><circle cx="10" cy="14.4" r=".9" fill="currentColor"/></svg>
+          <div class="copy"><div class="k">待决 · 废弃</div><div class="t">这条问法放弃了</div><div class="q">边还在，不进正文。</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="lab">未挂段 · 【待定】</div>
+        <div class="card is-loose" data-kind="source">
+          <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><path d="M4 5.5h5.2c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7H4V5.5zm7.3 0H16.5c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7h-3.9V5.5z" fill="currentColor"/></svg>
+          <div class="copy"><div class="k">资料 · 未挂段</div><div class="t">先扔进来的一句</div><div class="q">没有线。怎么接到第 3 拍，还没锁。</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="lab">进行中 · S6 才进现场</div>
+        <div class="card is-forming" data-kind="assist">
+          <span class="glow" aria-hidden="true"></span>
+          <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true"><rect x="4" y="4" width="12" height="12" rx="2.5" fill="none" stroke="currentColor" stroke-width="1.4" stroke-dasharray="2.2 1.8"/></svg>
+          <div class="copy"><div class="k">助手产出</div><div class="t">正在长出来</div><div class="q">光只包这张卡。纸上没有。</div></div>
+        </div>
+      </div>
+    </div>
+  </section>
 </div>
+<script>
+(function () {
+  const LOGICAL = { w: 1194, h: 834 };
+  const screenEl = document.getElementById("screen");
+  const scene = document.getElementById("scene");
+  const paper = document.getElementById("paper");
+  const wires = document.getElementById("wires");
+  const hint = document.getElementById("hint");
+  const live = document.getElementById("live");
+  const portUsed = document.getElementById("port-used");
+  const portNow = document.getElementById("port-now");
+  const cards = [...document.querySelectorAll(".card[data-pid]")];
+  const paras = {
+    now: document.getElementById("here"),
+    used: paper.querySelector('[data-pid="used"]')
+  };
+  let current = "now";
+  const colors = { source: "#007AFF", open: "#C47B17", assist: "#5B7C8A", tension: "#C4474A" };
+
+  function fit() {
+    const liveMode = document.body.classList.contains("live");
+    const host = screenEl.parentElement.getBoundingClientRect();
+    const scale = liveMode
+      ? Math.min(host.width / LOGICAL.w, host.height / LOGICAL.h)
+      : host.width / LOGICAL.w;
+    screenEl.style.transform = "scale(" + scale + ")";
+    if (liveMode) {
+      screenEl.style.position = "absolute";
+      screenEl.style.left = ((host.width - LOGICAL.w * scale) / 2) + "px";
+      screenEl.style.top = ((host.height - LOGICAL.h * scale) / 2) + "px";
+    } else {
+      screenEl.style.position = "relative";
+      screenEl.style.left = "0";
+      screenEl.style.top = "0";
+    }
+  }
+
+  function vis(el) {
+    return el.offsetTop - paper.scrollTop + el.offsetHeight / 2;
+  }
+  function overlap(el) {
+    const top = el.offsetTop - paper.scrollTop;
+    return Math.min(paper.clientHeight, top + el.offsetHeight) - Math.max(0, top);
+  }
+  function curve(x1, y1, x2, y2) {
+    const dx = (x2 - x1) * 0.45;
+    return "M " + x1 + " " + y1 + " C " + (x1 + dx) + " " + y1 + ", " + (x2 - dx) + " " + y2 + ", " + x2 + " " + y2;
+  }
+
+  function layout() {
+    const paperTop = paper.offsetTop;
+    const paperLeft = paper.offsetLeft;
+    const paperW = paper.offsetWidth;
+    const paperH = paper.clientHeight;
+    const hereEl = paras[current];
+    const hereVisible = overlap(hereEl) > hereEl.offsetHeight * 0.55;
+    scene.classList.toggle("is-away", !hereVisible);
+    Object.keys(paras).forEach(function (pid) {
+      paras[pid].classList.toggle("here", pid === current);
+    });
+
+    const mid = vis(hereEl);
+    const portY = paperTop + Math.max(16, Math.min(paperH - 16, mid));
+    const leftX = paperLeft;
+    const rightX = paperLeft + paperW;
+    const gutter = 22;
+
+    const paths = [];
+    const sideHas = { left: false, right: false };
+    ["left", "right"].forEach(function (side) {
+      const group = cards.filter(function (c) {
+        return c.dataset.pid === current && c.dataset.side === side;
+      });
+      sideHas[side] = group.length > 0;
+      const gap = 8;
+      const heights = group.map(function (c) { return hereVisible ? c.offsetHeight : 44; });
+      const total = heights.reduce(function (a, b) { return a + b; }, 0) + gap * Math.max(0, group.length - 1);
+      let y = paperTop + mid - total / 2;
+      if (!hereVisible) {
+        y = mid < 0 ? paperTop + 16 : paperTop + paperH - total - 16;
+      } else {
+        y = Math.max(paperTop + 8, Math.min(paperTop + paperH - total - 8, y));
+      }
+      group.forEach(function (card, i) {
+        const h = hereVisible ? card.offsetHeight : 44;
+        card.style.top = y + "px";
+        card.style.display = "";
+        if (side === "left") {
+          card.style.left = gutter + "px";
+          card.style.right = "auto";
+        } else {
+          card.style.right = gutter + "px";
+          card.style.left = "auto";
+        }
+        const cx = side === "left"
+          ? (hereVisible ? card.offsetLeft + card.offsetWidth : card.offsetLeft + 22)
+          : (hereVisible ? card.offsetLeft : card.offsetLeft + 22);
+        const cy = y + h / 2;
+        const x0 = side === "left" ? leftX : rightX;
+        paths.push('<path d="' + curve(x0, portY, cx, cy) + '" fill="none" stroke="' + colors[card.dataset.kind] + '" stroke-opacity="' + (hereVisible ? ".7" : ".35") + '" stroke-width="1.15"/>');
+        y += h + gap;
+      });
+    });
+
+    cards.filter(function (c) { return c.dataset.pid !== current; }).forEach(function (c) {
+      c.style.display = "none";
+    });
+
+    const usedOnScreen = overlap(paras.used) > 20 && current !== "used";
+    portUsed.hidden = !usedOnScreen;
+    if (usedOnScreen) {
+      portUsed.style.top = (paperTop + vis(paras.used) - 22) + "px";
+      portUsed.style.left = (paperLeft + paperW - 22) + "px";
+    }
+    const nowOnScreen = overlap(paras.now) > 20 && current !== "now";
+    portNow.hidden = !nowOnScreen;
+    if (nowOnScreen) {
+      portNow.style.top = (paperTop + vis(paras.now) - 22) + "px";
+      portNow.style.left = (paperLeft + paperW - 22) + "px";
+    }
+
+    if (sideHas.left) {
+      paths.push('<circle cx="' + leftX + '" cy="' + portY + '" r="3.5" fill="' + colors.source + '" fill-opacity="' + (hereVisible ? "1" : ".4") + '"/>');
+    }
+    if (sideHas.right) {
+      paths.push('<circle cx="' + rightX + '" cy="' + portY + '" r="3.5" fill="' + colors.open + '" fill-opacity="' + (hereVisible ? "1" : ".4") + '"/>');
+    }
+    wires.innerHTML = paths.join("");
+
+    const text = !hereVisible
+      ? "这段已滚出纸面。点圆钮回来。"
+      : (current === "now"
+        ? "四种角色都在这段旁边。点上一句左侧端口，看静默。"
+        : "上一句打开：已用卡。点当前段的位置或再滚回去。");
+    hint.innerHTML = "<b>纸是最亮的那一块。</b> " + text;
+    live.textContent = text;
+  }
+
+  function setCurrent(pid) {
+    current = pid;
+    if (pid === "used") {
+      paras.used.scrollIntoView({ block: "center", behavior: "auto" });
+    } else {
+      paras.now.scrollIntoView({ block: "center", behavior: "auto" });
+    }
+    layout();
+  }
+
+  paper.addEventListener("scroll", layout, { passive: true });
+  window.addEventListener("resize", function () { fit(); layout(); });
+  screenEl.addEventListener("wheel", function (e) {
+    if (e.ctrlKey || e.metaKey) e.preventDefault();
+  }, { passive: false });
+  screenEl.addEventListener("gesturestart", function (e) { e.preventDefault(); });
+
+  cards.forEach(function (card) {
+    card.addEventListener("click", function () {
+      if (scene.classList.contains("is-away")) {
+        paras[current].scrollIntoView({ block: "center", behavior: "auto" });
+        layout();
+        return;
+      }
+      const on = card.getAttribute("aria-pressed") !== "true";
+      cards.forEach(function (c) {
+        const yes = c === card && on;
+        c.setAttribute("aria-pressed", yes ? "true" : "false");
+        c.classList.toggle("is-on", yes);
+      });
+    });
+  });
+  portUsed.addEventListener("click", function () { setCurrent("used"); });
+  portNow.addEventListener("click", function () { setCurrent("now"); });
+
+  document.getElementById("enter-live").addEventListener("click", function () {
+    document.body.classList.add("live");
+    fit();
+    layout();
+    paper.focus();
+  });
+  document.addEventListener("keydown", function (e) {
+    if (e.key === "Escape" && document.body.classList.contains("live")) {
+      document.body.classList.remove("live");
+      fit();
+      layout();
+    }
+  });
+
+  fit();
+  paper.scrollTop = paras.now.offsetTop - paper.clientHeight * 0.36;
+  layout();
+})();
+</script>
 </body>
 </html>
