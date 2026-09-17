@@ -3,42 +3,120 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>写作现场 · 旁注色</title>
+<title>写作现场 · 旁注视觉草案</title>
 <style>
 :root {
-  --bg: #F2F2F7; --ink: #1C1C1E; --muted: #6C6C70; --line: #D8D8DC;
-  --paper: #fff; --field: #E8E8ED;
-  --src: #007AFF; --open: #C47B17; --assist: #5B7C8A; --tension: #C4474A;
-  --bad: #B23A3A;
+  --bg: #F2F2F7;
+  --ink: #1C1C1E;
+  --muted: #6C6C70;
+  --line: #D8D8DC;
+  --field: #E8E8ED;
+  --paper: #fff;
+  --src: #007AFF;
+  --open: #C47B17;
+  --assist: #5B7C8A;
+  --tension: #C4474A;
+  --bezel: #C7C7CC;
 }
 * { box-sizing: border-box; }
 body {
-  margin: 0; background: var(--bg); color: var(--ink);
-  font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", system-ui, sans-serif;
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 15px/1.65 -apple-system, BlinkMacSystemFont, "PingFang SC", system-ui, sans-serif;
 }
-.wrap { max-width: 980px; margin: 0 auto; padding: 32px 24px 80px; }
-.nav { display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px; font: 500 12px/1 ui-monospace, Menlo, monospace; }
+.wrap { max-width: 1180px; margin: 0 auto; padding: 32px 24px 96px; }
+.nav {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 20px;
+  font: 500 12px/1 ui-monospace, Menlo, monospace;
+}
 .nav a { color: var(--muted); text-decoration: none; }
 .nav a[aria-current="page"] { color: var(--ink); }
-.eyebrow { font: 500 11px/1 ui-monospace, Menlo, monospace; letter-spacing: .12em; text-transform: uppercase; color: var(--muted); }
-h1 { font-size: 26px; font-weight: 600; margin: 10px 0 8px; }
-.lead { color: var(--muted); max-width: 44em; }
-.row { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin-top: 22px; }
-@media (max-width: 720px) { .row { grid-template-columns: 1fr; } }
-.card {
-  display: flex; gap: 8px; background: #fff; border: 1px solid rgba(0,0,0,.08);
-  border-radius: 6px; padding: 10px 12px 12px 8px;
-  box-shadow: 0 1px 3px rgba(0,0,0,.06);
+.eyebrow {
+  font: 500 11px/1 ui-monospace, Menlo, monospace;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
 }
-.bar { width: 2px; border-radius: 1px; flex: none; }
-.k { font-size: 11px; margin-bottom: 2px; }
-.t { font-weight: 500; }
-.q { font-size: 12px; color: var(--muted); margin-top: 2px; }
-.wrong .card { border: 0; color: #1a1a1a; }
-.fill-g { background: #D8EDD4; }
-.fill-p { background: #F3D6EA; }
-.note { margin-top: 18px; font-size: 14px; color: var(--muted); max-width: 44em; }
-.no { color: var(--bad); font-weight: 600; }
+h1 { font-size: 26px; font-weight: 600; margin: 10px 0 8px; }
+h2 { font-size: 17px; font-weight: 600; margin: 40px 0 12px; }
+.lead { color: var(--muted); max-width: 46em; margin: 0 0 8px; }
+.reco {
+  background: #fff; border: 1px solid var(--line); border-radius: 10px;
+  padding: 12px 16px; margin: 16px 0 24px; max-width: 46em; font-size: 14px;
+}
+.device {
+  width: 100%; aspect-ratio: 1194 / 834;
+  background: var(--bezel); border-radius: 18px; padding: 10px;
+  box-shadow: 0 12px 32px rgba(0,0,0,.12);
+}
+.screen {
+  position: relative; height: 100%; border-radius: 8px;
+  background: var(--field); overflow: hidden;
+}
+.toolbar {
+  height: 36px; border-bottom: 1px solid var(--line); background: #F7F7F8;
+  display: flex; align-items: center; justify-content: center;
+  font: 600 12px/1 -apple-system, "PingFang SC", sans-serif;
+}
+.paper {
+  position: absolute; left: 50%; top: 52px; bottom: 28px; width: 52%;
+  transform: translateX(-50%);
+  background: var(--paper); border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 8px 24px rgba(0,0,0,.06);
+  padding: 36px 40px 28px;
+  font-family: "Iowan Old Style", Palatino, "Songti SC", serif;
+  font-size: clamp(13px, 1.35vw, 16.5px); line-height: 1.7;
+  overflow: hidden;
+}
+.paper h3 { font-size: 1.65em; font-weight: 400; margin: 0 0 .75em; }
+.paper .p { margin: 0 0 .8em; color: var(--ink); }
+.paper .here { position: relative; }
+.paper .here::before {
+  content: ""; position: absolute; left: -16px; top: 3px; bottom: 3px; width: 2px;
+  background: #007AFF; border-radius: 1px;
+}
+.port {
+  position: absolute; width: 7px; height: 7px; border-radius: 50%;
+  top: 50%; transform: translateY(-50%);
+}
+.port.l { left: -3.5px; background: var(--src); box-shadow: 0 0 8px color-mix(in srgb, var(--src) 45%, transparent); }
+.port.r { right: -3.5px; background: var(--open); box-shadow: 0 0 8px color-mix(in srgb, var(--open) 45%, transparent); }
+.card {
+  position: absolute; width: 18%; min-width: 168px;
+  display: flex; gap: 8px; align-items: flex-start;
+  background: #fff; border: 1px solid rgba(0,0,0,.08);
+  border-radius: 8px; padding: 10px 12px 12px;
+  font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", sans-serif;
+  font-size: 12px; line-height: 1.45;
+}
+.card .glyph { width: 18px; height: 18px; flex: none; margin-top: 1px; }
+.card .k { font-size: 11px; margin-bottom: 2px; }
+.card .t { font-weight: 500; }
+.card .q { margin-top: 3px; color: var(--muted); font-size: 11px; }
+.card.src { left: 2.6%; top: 26%; }
+.card.ask {
+  right: 2.6%; top: 40%;
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--open) 40%, transparent),
+    0 10px 22px color-mix(in srgb, var(--open) 20%, transparent);
+}
+.card.idle { box-shadow: 0 1px 3px rgba(0,0,0,.07); }
+.wires { position: absolute; inset: 36px 0 0; width: 100%; height: calc(100% - 36px); pointer-events: none; }
+.trio { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 12px; margin-top: 14px; }
+@media (max-width: 800px) { .trio { grid-template-columns: 1fr; } }
+.mini {
+  background: var(--field); border-radius: 10px; padding: 16px;
+  min-height: 120px;
+}
+.mini .lab { font-size: 12px; color: var(--muted); margin-bottom: 10px; }
+.mini .pick { font-size: 11px; color: #248A3D; font-weight: 600; }
+.mini .no { color: #C7474A; font-weight: 600; }
+.swatch {
+  display: flex; gap: 8px; background: #fff; border-radius: 8px;
+  padding: 10px 12px; border: 1px solid rgba(0,0,0,.08); margin-top: 8px;
+}
+.bar { width: 2px; border-radius: 1px; background: var(--src); }
+.fill { background: #D8EDD4; border: 0; }
+.grid4 { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-top: 12px; }
+.cap { margin-top: 14px; font-size: 13px; color: var(--muted); max-width: 46em; }
 </style>
 </head>
 <body>
@@ -46,51 +124,114 @@ h1 { font-size: 26px; font-weight: 600; margin: 10px 0 8px; }
   <nav class="nav">
     <a href="一次写作.html">一次写作</a>
     <a href="iPad横-写作现场.html">iPad 横 · S1</a>
-    <a href="旁注色.html" aria-current="page">旁注色</a>
+    <a href="旁注色.html" aria-current="page">旁注草案</a>
     <a href="ai-进行中.html">AI 进行中</a>
   </nav>
-  <div class="eyebrow">Write-field · 种类色 · 不是填色</div>
-  <h1>四种角色，一条竖线</h1>
-  <p class="lead">资料、待决、助手产出、反驳可以分色。卡永远是白的。颜色只在左边 2pt 和 caption。验证 / 生成资料 / 检视 / 图表不要各开一色——有结论的都算助手产出。</p>
-  <div class="row">
-    <div class="card">
-      <div class="bar" style="background:var(--src)"></div>
-      <div>
-        <div class="k" style="color:var(--src)">资料</div>
-        <div class="t">Flowise 的教训</div>
-        <div class="q">剪藏或检索到的出处。</div>
+  <div class="eyebrow">草案 · 先看这一屏 · 未进工程</div>
+  <h1>种类在符号和线上</h1>
+  <p class="lead">四种角色不变，卡仍是白的。颜色放在符号、caption、接到这段的线，以及选中时一点同色的光。满意了再改 Swift。</p>
+  <div class="reco">右边问题卡是<strong>选中</strong>态。左边资料卡是安静态。纸永远白。</div>
+
+  <div class="device">
+    <div class="screen">
+      <div class="toolbar">减速带</div>
+      <svg class="wires" viewBox="0 0 1194 770" preserveAspectRatio="none" aria-hidden="true">
+        <path d="M286 248 C 240 248, 228 228, 176 228" fill="none" stroke="#007AFF" stroke-opacity=".55" stroke-width="1.25"/>
+        <path d="M908 248 C 958 248, 978 318, 1022 318" fill="none" stroke="#C47B17" stroke-opacity=".55" stroke-width="1.25"/>
+      </svg>
+      <div class="card src idle">
+        <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true">
+          <path d="M4 5.5h5.2c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7H4V5.5zm7.3 0H16.5c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7h-3.9V5.5z" fill="#007AFF"/>
+        </svg>
+        <div>
+          <div class="k" style="color:var(--src)">资料</div>
+          <div class="t">Flowise 的教训</div>
+          <div class="q">输出不是终点，是待审阅的对象。</div>
+        </div>
       </div>
-    </div>
-    <div class="card">
-      <div class="bar" style="background:var(--open)"></div>
-      <div>
-        <div class="k" style="color:var(--open)">待决</div>
-        <div class="t">这段的判断站得住吗？</div>
-        <div class="q">问题、待查、还没有结论的验证。</div>
+      <div class="paper">
+        <h3>减速带</h3>
+        <div class="p">写作的价值在过程里。成品只是过程留下的痕迹；真正发生判断的地方，是某一段写完之后，你还敢不敢再看它一眼。</div>
+        <div class="p">AI 是助手，不是主人。它可以读这段、提出疑问、画出一张图，但进不进正文，只能由写的人决定。</div>
+        <div class="here">上下文驻留在文章周围，而不是空间本身。资料和尚未回答的问题如果能停在这段旁边，隔夜打开就不需要再把思路从聊天记录里捞回来。
+          <span class="port l"></span>
+          <span class="port r"></span>
+        </div>
+        <div class="p">因此判断成立，要看有没有少切一次。</div>
       </div>
-    </div>
-    <div class="card">
-      <div class="bar" style="background:var(--assist)"></div>
-      <div>
-        <div class="k" style="color:var(--assist)">助手产出</div>
-        <div class="t">检视：前提未写明</div>
-        <div class="q">回答、检视、AI 找来的资料、待插入的图。</div>
-      </div>
-    </div>
-    <div class="card">
-      <div class="bar" style="background:var(--tension)"></div>
-      <div>
-        <div class="k" style="color:var(--tension)">张力</div>
-        <div class="t">最强反驳</div>
-        <div class="q">反对这段或那张卡。不是「AI 判假」。</div>
+      <div class="card ask">
+        <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true">
+          <circle cx="10" cy="10" r="7.2" fill="none" stroke="#C47B17" stroke-width="1.4"/>
+          <path d="M7.8 7.6c.3-1.3 1.3-2 2.3-2s2.2.8 2.2 2.1c0 1.1-.6 1.6-1.4 2.2-.7.5-.9.9-.9 1.6v.2" fill="none" stroke="#C47B17" stroke-width="1.4" stroke-linecap="round"/>
+          <circle cx="10" cy="14.4" r=".9" fill="#C47B17"/>
+        </svg>
+        <div>
+          <div class="k" style="color:var(--open)">待决</div>
+          <div class="t">这段的判断站得住吗？</div>
+          <div class="q">先停在旁边，进正文由你决定。</div>
+        </div>
       </div>
     </div>
   </div>
-  <p class="note">进行中的虹彩 Glow 是状态，落地后熄掉，露出这条色条。</p>
-  <p class="note"><span class="no">不要：</span></p>
-  <div class="row wrong">
-    <div class="card fill-g"><div><div class="k">周围 · 资料</div><div class="t">整张绿</div></div></div>
-    <div class="card fill-p"><div><div class="k">周围 · 问题</div><div class="t">整张紫</div></div></div>
+  <p class="cap">线的颜色跟卡的种类走。选中时光也是那种颜色，不是系统蓝描边。</p>
+
+  <h2>另外两种角色（同一套语言）</h2>
+  <div class="grid4">
+    <div class="card idle" style="position:relative;width:auto;min-width:0">
+      <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true">
+        <rect x="4" y="4" width="12" height="12" rx="2.5" fill="none" stroke="#5B7C8A" stroke-width="1.4" stroke-dasharray="2.2 1.8"/>
+      </svg>
+      <div>
+        <div class="k" style="color:var(--assist)">助手产出</div>
+        <div class="t">检视：前提未写明</div>
+        <div class="q">回答、检视、待插入的图。一种色。</div>
+      </div>
+    </div>
+    <div class="card idle" style="position:relative;width:auto;min-width:0">
+      <svg class="glyph" viewBox="0 0 20 20" aria-hidden="true">
+        <circle cx="10" cy="10" r="7.2" fill="none" stroke="#C4474A" stroke-width="1.4"/>
+        <path d="M10 6.4v4.6" stroke="#C4474A" stroke-width="1.4" stroke-linecap="round"/>
+        <circle cx="10" cy="13.6" r=".85" fill="#C4474A"/>
+      </svg>
+      <div>
+        <div class="k" style="color:var(--tension)">张力</div>
+        <div class="t">最强反驳</div>
+        <div class="q">不是「AI 判假」。</div>
+      </div>
+    </div>
+  </div>
+
+  <h2>对照：不要回去的两路</h2>
+  <div class="trio">
+    <div class="mini">
+      <div class="lab"><span class="no">不用</span> · 整张填色</div>
+      <div class="swatch fill">
+        <div>
+          <div class="k">周围 · 资料</div>
+          <div class="t">知识图谱</div>
+        </div>
+      </div>
+    </div>
+    <div class="mini">
+      <div class="lab"><span class="no">不用</span> · 左侧色条</div>
+      <div class="swatch">
+        <div class="bar"></div>
+        <div>
+          <div class="k">资料</div>
+          <div class="t">十年前的面板</div>
+        </div>
+      </div>
+    </div>
+    <div class="mini">
+      <div class="lab"><span class="pick">草案</span> · 符号 + 线</div>
+      <div class="swatch">
+        <svg class="glyph" viewBox="0 0 20 20" width="18" height="18"><path d="M4 5.5h5.2c.5 3.2-.6 6.8-4.4 8.2l.5-1.5c2.1-.8 2.8-2.8 2.6-4.7H4V5.5z" fill="#007AFF"/></svg>
+        <div>
+          <div class="k" style="color:var(--src)">资料</div>
+          <div class="t">颜色在关系和符号上</div>
+        </div>
+      </div>
+    </div>
   </div>
 </div>
 </body>
