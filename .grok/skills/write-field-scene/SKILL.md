@@ -10,7 +10,7 @@ description: >
 
 Read `写作现场 · 产品构思 v0.2.md` §3 / §3.8 / §3.9 before drawing. Colors, roles, and floor rules live there — do not invent a fifth kind color.
 
-You are designing a **manuscript on a desk**, not an iOS Settings screen and not a PKM board. The white sheet is the signature. Everything around it is a margin note.
+You are designing a **manuscript on a desk**, not an iOS Settings screen and not a PKM board. The sheet is the signature — warm writing paper in light mode, soft charcoal paper in dark — never harsh pure white or OLED black. Everything around it is a margin note sharing that surface language.
 
 ## Always show these 旁注 forms
 
@@ -18,10 +18,10 @@ When asked to draw the scene or “all forms”, put every row on the plate (liv
 
 | Form | What it looks like | Source |
 | --- | --- | --- |
-| 资料 | White card, quote glyph, blue caption + wire | §3.8 |
-| 待决 | White card, ? glyph, amber caption + wire | §3.8 |
-| 助手产出 | White card, dashed-square glyph, slate caption + wire. Answers, critiques, **charts/tables waiting to insert** share this role | §3.8 |
-| 张力 | White card, ! glyph, crimson caption + wire. Counterargument, not “AI judged false” | §3.8 |
+| 资料 | Paper-matched card, quote glyph, blue caption + wire | §3.8 |
+| 待决 | Paper-matched card, ? glyph, amber caption + wire | §3.8 |
+| 助手产出 | Paper-matched card, dashed-square glyph, slate caption + wire. Answers, critiques, **charts/tables waiting to insert** share this role | §3.8 |
+| 张力 | Paper-matched card, ! glyph, crimson caption + wire. Counterargument, not “AI judged false” | §3.8 |
 | 当前段打开 | Cards already out on both sides; one port per side of the block | §3.4 |
 | 别的段静默 | Finger-sized port only; tap opens that block’s cards | §3.4 |
 | 无卡的段 | No port | §3.4 |
@@ -41,7 +41,7 @@ The last failure mode was **old Apple**: `systemGray6` field, 36pt toolbar, 8pt 
 
 Do this instead:
 
-- **Desk** recedes (stone gray, not `#F2F2F7` plastic). **Paper stays `#FFFFFF`**. Dark appearance may darken the desk only.
+- **Desk** recedes (stone gray, not `#F2F2F7` plastic). **Paper / cards follow `WriteFieldTheme`** (light ≈ `#FFFEFA`, dark ≈ `#2B2A28`). Desk is darker than the sheet in both appearances.
 - No iOS navigation bar on the scene. The title lives on the paper, in New York.
 - Paper is a sheet: small radius (2px), a real shadow, a folio. Body 17pt+ New York / 宋体, loose leading.
 - Cards are marginalia: 4px radius, hairline, SF/PingFang, kind color only on glyph + caption + wire. Title ink.
@@ -54,4 +54,4 @@ S1 still must scroll only the paper, cards follow Y, 44pt targets. Glass stacks 
 
 ## After drawing
 
-Open the HTML and check: paper is the brightest thing; four roles are all visible without reading a legend first; a quiet paragraph has only a port; a used/derived/forming specimen is labeled.
+Open the HTML and check: paper is brighter than the desk; four roles are all visible without reading a legend first; a quiet paragraph has only a port; a used/derived/forming specimen is labeled. Dark plate: soft charcoal sheet, not pure black.
