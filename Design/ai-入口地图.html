@@ -1,0 +1,358 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>写作现场 · AI 入口地图</title>
+<style>
+:root {
+  --bg: #E6E2DA;
+  --ink: #1A1916;
+  --muted: #6B6560;
+  --line: #D4CDC3;
+  --desk: #C9C3B8;
+  --paper: #FFFEFA;
+  --card: #FFFEFA;
+  --bezel: #B8B2A8;
+  --src: #007AFF;
+  --open: #C47B17;
+  --assist: #5B7C8A;
+  --tension: #C4474A;
+  --accent: #3D5A80;
+  --hi: #2C6BED;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121110;
+    --ink: #F2EFE8;
+    --muted: #9A948A;
+    --line: #3A3630;
+    --desk: #2A2824;
+    --paper: #2B2A28;
+    --card: #2B2A28;
+    --bezel: #3A3630;
+    --src: #0A84FF;
+    --open: #E0A03A;
+    --assist: #7A9AAA;
+    --tension: #E06062;
+    --accent: #8BB0D8;
+    --hi: #6EA0F0;
+  }
+}
+* { box-sizing: border-box; }
+html, body { margin: 0; }
+body {
+  background: var(--bg); color: var(--ink);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "PingFang SC", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 96px; }
+.nav {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px;
+  font: 500 12px/1 ui-monospace, Menlo, monospace;
+}
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a[aria-current="page"] { color: var(--ink); }
+.eyebrow {
+  font: 500 11px/1 ui-monospace, Menlo, monospace;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+}
+h1 { font-size: 26px; font-weight: 600; margin: 10px 0 8px; text-wrap: balance; }
+.lead { color: var(--muted); max-width: 48em; margin: 0 0 12px; }
+.reco {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 16px; margin: 0 0 20px; max-width: 52em; font-size: 14px;
+}
+.reco b { color: var(--hi); }
+.how { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 18px; }
+.how button {
+  font: 500 13px/1 -apple-system, "PingFang SC", sans-serif;
+  border-radius: 8px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink); padding: 10px 14px;
+  cursor: pointer; min-height: 44px;
+}
+.how button[aria-pressed="true"] {
+  border-color: var(--hi);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--hi) 35%, transparent);
+}
+.stage { width: 100%; max-width: 1100px; }
+.device {
+  position: relative; width: 100%; aspect-ratio: 1194 / 834;
+  background: var(--bezel); border-radius: 22px; padding: 10px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.14);
+}
+.screen {
+  position: relative; width: 100%; height: 100%;
+  border-radius: 12px; overflow: hidden; background: var(--desk);
+}
+/* C — Topic strip */
+.meta {
+  position: absolute; left: 50%; top: 14px; transform: translateX(-50%);
+  width: min(52%, 520px); z-index: 5;
+  display: flex; align-items: center; gap: 10px;
+  padding: 6px 10px; border-radius: 8px;
+  background: color-mix(in srgb, var(--paper) 88%, transparent);
+  border: 1px solid color-mix(in srgb, var(--line) 80%, transparent);
+  backdrop-filter: blur(8px);
+  font-size: 12px; color: var(--muted);
+  opacity: .55; transition: opacity .2s, box-shadow .2s, border-color .2s;
+}
+.meta .stance { flex: 1; overflow: hidden; white-space: nowrap; text-overflow: ellipsis; color: var(--ink); }
+.meta .badge {
+  flex: none; font: 500 11px/1 ui-monospace, Menlo, monospace;
+  padding: 4px 7px; border-radius: 6px;
+  background: color-mix(in srgb, var(--assist) 14%, transparent);
+  color: var(--assist);
+}
+.layer-c .meta, .meta.hot {
+  opacity: 1;
+  border-color: var(--hi);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--hi) 30%, transparent),
+    0 8px 20px color-mix(in srgb, var(--hi) 18%, transparent);
+}
+.paper {
+  position: absolute; left: 50%; top: 48px; bottom: 28px; width: 46%;
+  transform: translateX(-50%); z-index: 1;
+  background: var(--paper); border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 10px 28px rgba(0,0,0,.08);
+  padding: 36px 40px 28px;
+  font-family: "Iowan Old Style", Palatino, "Songti SC", "New York", serif;
+  font-size: clamp(13px, 1.25vw, 16px); line-height: 1.72;
+  color: var(--ink); overflow: hidden;
+}
+.paper h2 { font-size: 1.55em; font-weight: 400; margin: 0 0 .7em; }
+.paper p { margin: 0 0 .85em; }
+.paper .here { position: relative; }
+.paper .here::before {
+  content: ""; position: absolute; left: -14px; top: 2px; bottom: 2px; width: 2px;
+  background: var(--open); border-radius: 1px; opacity: .85;
+}
+.handle {
+  position: absolute; right: -1px; top: 42%; width: 10px; height: 56px;
+  border-radius: 6px 0 0 6px;
+  background: color-mix(in srgb, var(--open) 55%, var(--paper));
+  opacity: .35; transition: opacity .2s, box-shadow .2s;
+}
+.layer-a .handle, .handle.hot {
+  opacity: 1;
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--hi) 45%, transparent),
+    0 6px 16px color-mix(in srgb, var(--open) 25%, transparent);
+}
+.rail {
+  position: absolute; z-index: 4; width: 22%; min-width: 160px;
+  display: flex; flex-direction: column; gap: 10px;
+  transition: filter .2s, opacity .2s;
+}
+.rail.left { left: 3%; top: 22%; }
+.rail.right { right: 3%; top: 28%; }
+.note {
+  background: var(--card); border: 1px solid rgba(0,0,0,.08);
+  border-radius: 4px; padding: 10px 12px;
+  font: 12px/1.45 -apple-system, "PingFang SC", sans-serif;
+  box-shadow: 0 4px 14px rgba(0,0,0,.05);
+  transition: box-shadow .2s, border-color .2s;
+  cursor: grab;
+}
+.note:active { cursor: grabbing; }
+@media (prefers-color-scheme: dark) {
+  .note { border-color: rgba(255,255,255,.08); }
+}
+.note .k { font-size: 11px; margin-bottom: 2px; }
+.note .t { font-weight: 500; }
+.note .q { margin-top: 4px; color: var(--muted); font-size: 11px; }
+.note.src .k { color: var(--src); }
+.note.open .k { color: var(--open); }
+.note.assist .k { color: var(--assist); }
+.note.tension .k { color: var(--tension); }
+.layer-b .note.assist, .note.assist.hot {
+  border-color: color-mix(in srgb, var(--hi) 45%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--hi) 28%, transparent),
+    0 10px 22px color-mix(in srgb, var(--assist) 18%, transparent);
+}
+.menu {
+  position: absolute; right: 24%; top: 46%; z-index: 6;
+  width: 200px; padding: 8px; border-radius: 10px;
+  background: var(--card); border: 1px solid var(--line);
+  box-shadow: 0 12px 32px rgba(0,0,0,.14);
+  font-size: 12px; display: none;
+}
+.menu.show { display: block; }
+.menu button {
+  display: block; width: 100%; text-align: left;
+  border: 0; background: transparent; color: var(--ink);
+  padding: 9px 10px; border-radius: 6px; cursor: pointer;
+  font: 500 12px/1.3 -apple-system, "PingFang SC", sans-serif;
+}
+.menu button:hover { background: color-mix(in srgb, var(--assist) 12%, transparent); }
+.palette {
+  position: absolute; left: 50%; top: 18%; transform: translateX(-50%);
+  z-index: 7; width: min(420px, 48%);
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  box-shadow: 0 16px 40px rgba(0,0,0,.16);
+  padding: 10px; display: none;
+}
+.palette.show { display: block; }
+.palette .ph {
+  font: 500 11px/1 ui-monospace, Menlo, monospace; color: var(--muted);
+  padding: 6px 8px 10px; letter-spacing: .06em;
+}
+.palette button {
+  display: flex; width: 100%; gap: 10px; align-items: center;
+  border: 0; background: transparent; color: var(--ink);
+  padding: 10px 10px; border-radius: 8px; cursor: pointer;
+  font: 500 13px/1.3 -apple-system, "PingFang SC", sans-serif; text-align: left;
+}
+.palette button:hover { background: color-mix(in srgb, var(--hi) 10%, transparent); }
+.palette .sym {
+  width: 22px; height: 22px; border-radius: 6px;
+  background: color-mix(in srgb, var(--assist) 16%, transparent);
+  color: var(--assist); display: grid; place-items: center;
+  font: 600 11px/1 ui-monospace, Menlo, monospace;
+}
+.legend {
+  margin-top: 22px; display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
+  max-width: 900px;
+}
+@media (max-width: 720px) { .legend { grid-template-columns: 1fr; } }
+.legend article {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 14px 16px;
+}
+.legend h3 { margin: 0 0 6px; font-size: 14px; }
+.legend p { margin: 0; font-size: 13px; color: var(--muted); }
+.legend code { font: 500 11px/1 ui-monospace, Menlo, monospace; color: var(--ink); }
+.dim .rail, .dim .paper, .dim .meta { opacity: .35; }
+.dim .meta.hot, .layer-c .meta { opacity: 1; }
+.callout {
+  margin-top: 18px; font-size: 13px; color: var(--muted); max-width: 52em;
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="README.md">Design</a>
+    <a href="iPad横-写作现场.html">iPad 横</a>
+    <a href="ai-进行中.html">进行中</a>
+    <a href="ai-入口地图.html" aria-current="page">AI 入口地图</a>
+    <a href="ai-召唤球.html">召唤球</a>
+    <a href="回填选择.html">回填</a>
+    <a href="参考页卡.html">参考页</a>
+    <a href="ai-上下文与姿态.html">上下文</a>
+  </nav>
+
+  <p class="eyebrow">AI UX · Plate 7</p>
+  <h1>从问题找到合适的入口</h1>
+  <p class="lead">保留侧边、卡片、写作意图与命令目录四处入口。提问可以点按；追问留在讨论卡里；阅读范围跟着本次问题选择。</p>
+  <div class="reco">点下面的层，看现场里<strong>该亮的那一块</strong>。本页只展示入口分布；完整可操作提案见 <a href="一次写作.html">一次写作</a>、<a href="回填选择.html">采用与引用</a>、<a href="ai-上下文与姿态.html">本次阅读范围</a>。新规则待讨论。</div>
+
+  <div class="how" role="toolbar" aria-label="高亮入口层">
+    <button type="button" data-layer="all" aria-pressed="true">总览</button>
+    <button type="button" data-layer="a" aria-pressed="false">A 纸侧边</button>
+    <button type="button" data-layer="b" aria-pressed="false">B 卡菜单</button>
+    <button type="button" data-layer="c" aria-pressed="false">C Topic 条</button>
+    <button type="button" data-layer="d" aria-pressed="false">D 命令目录</button>
+  </div>
+
+  <div class="stage">
+    <div class="device">
+      <div class="screen" id="screen">
+        <div class="meta" id="meta" title="C · Topic 轻量条">
+          <span class="stance">写作意图 · 给已会 Functor 的人；要小例子</span>
+          <span class="badge">本次 · 当前段 + 资料</span>
+        </div>
+
+        <div class="rail left" aria-hidden="true">
+          <div class="note src">
+            <div class="k">资料</div>
+            <div class="t">traverse :: Applicative f ⇒ …</div>
+            <div class="q">Hackage · Data.Traversable</div>
+          </div>
+        </div>
+
+        <div class="paper">
+          <h2>Traversable</h2>
+          <p>我想从一个具体需求开始：逐项得到解析结果，和得到一份完整的解析结果，有什么区别？</p>
+          <p class="here">常有人把 <em>sequenceA</em> 记成 <em>traverse id</em>。我还想弄清楚这个等式的含义，以及它怎样帮助读者理解例子。</p>
+          <div class="handle" id="handle" title="A · 侧边把手"></div>
+        </div>
+
+        <div class="rail right">
+          <div class="note open">
+            <div class="k">待决</div>
+            <div class="t">sequenceA 是否就是 traverse id？</div>
+          </div>
+          <div class="note assist" id="assistCard">
+            <div class="k">助手产出</div>
+            <div class="t">是。sequenceA = traverse id。</div>
+            <div class="q">无引用来源 · 可追问、参照或采用</div>
+          </div>
+        </div>
+
+        <div class="menu" id="cardMenu" aria-label="B 卡菜单">
+          <button type="button" data-page="回填选择.html">选择采用内容…</button>
+          <button type="button" disabled title="这张助手卡没有引用来源">无来源，不能作 footnote</button>
+          <button type="button" data-page="一次写作.html">继续追问…</button>
+          <button type="button" data-page="ai-上下文与姿态.html">本次带上这张资料…</button>
+          <button type="button" data-page="回填选择.html">暂时不用…</button>
+        </div>
+
+        <div class="palette" id="palette" aria-label="D 命令目录">
+          <div class="ph">COMMAND</div>
+          <button type="button" data-page="ai-上下文与姿态.html">选择本次阅读范围…</button>
+          <button type="button" data-page="ai-上下文与姿态.html">请 AI 通读这篇…</button>
+          <button type="button" data-page="一次写作.html">留下我的理解…</button>
+          <button type="button" data-page="一次写作.html">回到写作现场…</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <article>
+      <h3>A · 纸侧边</h3>
+      <p>问、查阅、丢资料、反驳。点按与拖线都能起手；空稿讨论明确属于这篇，不伪造段落归属。</p>
+    </article>
+    <article>
+      <h3>B · 卡菜单</h3>
+      <p>继续追问、看依据、选择采用或暂时不用。作者可以把自己的理解留成便笺。</p>
+    </article>
+    <article>
+      <h3>C · Topic 轻量条</h3>
+      <p>可选的写作意图。请求时明确显示本次阅读范围；下一次取选定材料的当前版本，改稿不催刷新。</p>
+    </article>
+    <article>
+      <h3>D · 命令目录</h3>
+      <p>阅读范围、整篇阅读、回到讨论和专注。全文阅读由作者明确发起，结果仍在旁边。</p>
+    </article>
+  </div>
+
+  <p class="callout">下一板：<a href="回填选择.html">回填选择</a>（B 的细面）、<a href="参考页卡.html">参考页卡</a>（A 查阅落地）、<a href="ai-上下文与姿态.html">上下文与姿态</a>（C/D 细面）。</p>
+</div>
+<script>
+const screen = document.getElementById('screen');
+const meta = document.getElementById('meta');
+const handle = document.getElementById('handle');
+const assist = document.getElementById('assistCard');
+const menu = document.getElementById('cardMenu');
+const palette = document.getElementById('palette');
+const buttons = document.querySelectorAll('.how button');
+
+function setLayer(layer) {
+  screen.className = 'screen' + (layer === 'all' ? '' : ' layer-' + layer);
+  meta.classList.toggle('hot', layer === 'c');
+  handle.classList.toggle('hot', layer === 'a');
+  assist.classList.toggle('hot', layer === 'b');
+  menu.classList.toggle('show', layer === 'b');
+  palette.classList.toggle('show', layer === 'd');
+  buttons.forEach(b => b.setAttribute('aria-pressed', b.dataset.layer === layer ? 'true' : 'false'));
+}
+
+document.querySelectorAll('[data-page]').forEach(b => b.addEventListener('click', () => { window.location.href = b.dataset.page; }));
+buttons.forEach(b => b.addEventListener('click', () => setLayer(b.dataset.layer)));
+assist.addEventListener('click', () => setLayer('b'));
+meta.addEventListener('click', () => setLayer('c'));
+handle.addEventListener('click', () => setLayer('a'));
+</script>
+</body>
+</html>

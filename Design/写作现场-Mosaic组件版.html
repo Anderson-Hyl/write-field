@@ -1,0 +1,175 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <meta name="color-scheme" content="light dark">
+  <title>写作现场 · Mosaic 组件版</title>
+  <link rel="stylesheet" href="assets/writing-scene.css">
+  <link rel="stylesheet" href="assets/writing-scene-mosaic.css">
+  <script src="assets/writing-scene.js" defer></script>
+  <script src="assets/writing-scene-mosaic.js" defer></script>
+</head>
+<body class="mosaic-variant">
+<svg class="symbols" xmlns="http://www.w3.org/2000/svg" aria-hidden="true"><defs>
+  <symbol id="i-note" viewBox="0 0 24 24"><path d="M14 3H5a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-9M9 15l1-4L19 2l3 3-9 9-4 1Z"/></symbol>
+  <symbol id="i-chat" viewBox="0 0 24 24"><path d="M5 4h14a2 2 0 0 1 2 2v10a2 2 0 0 1-2 2H9l-5 4v-4a2 2 0 0 1-2-2V6a2 2 0 0 1 3-2Z"/><path d="M7 9h10M7 13h7"/></symbol>
+  <symbol id="i-book" viewBox="0 0 24 24"><path d="M12 5v16M3 3c4-1 7 0 9 2 2-2 5-3 9-2v16c-4-1-7 0-9 2-2-2-5-3-9-2V3Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M12 19V5m-6 6 6-6 6 6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="m6 6 12 12M6 18 18 6"/></symbol>
+  <symbol id="i-export" viewBox="0 0 24 24"><path d="M12 16V2m-5 5 5-5 5 5M5 10H3v11h18V10h-2"/></symbol>
+  <symbol id="i-undo" viewBox="0 0 24 24"><path d="m9 4-6 6 6 6M3 10h11a7 7 0 0 1 7 7v3"/></symbol>
+  <symbol id="i-focus" viewBox="0 0 24 24"><path d="M8 3H3v5m13-5h5v5M3 16v5h5m8 0h5v-5M8 8h8v8H8Z"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="m8 4 8 8-8 8"/></symbol>
+  <symbol id="i-tension" viewBox="0 0 24 24"><path d="M5 5h5v5M19 19h-5v-5M10 10 4 4m10 10 6 6M19 5h-5v5M5 19h5v-5m4-4 6-6M10 14l-6 6"/></symbol>
+</defs></svg>
+
+<a class="skip-link" href="#paper">跳到正文</a>
+<div class="prototype-bar">
+  <span class="prototype-name">Mosaic 组件版</span>
+  <div class="variant-switch" aria-label="设计版本">
+    <a href="写作现场-设计提案.html">原版</a>
+    <span aria-current="page">Mosaic</span>
+  </div>
+  <label class="scenario-control">查看状态
+    <select id="sceneSelect"><option value="writing">已有草稿</option><option value="blank">从空稿开始</option></select>
+  </label>
+  <span class="prototype-disclosure">固定示例 · 未接入 AI</span>
+  <a class="flow-link" href="一次写作.html">流程演练</a>
+</div>
+
+<header class="toolbar">
+  <div class="document-identity">
+    <span class="document-glyph"><svg aria-hidden="true"><use href="#i-note"/></svg></span>
+    <div><strong id="documentName">Traversable 随笔</strong><span id="saveStatus" role="status">仅保存在此浏览器</span></div>
+  </div>
+  <div class="toolbar-actions">
+    <button id="undoInsert" class="icon-button" title="撤销采用" aria-label="撤销最近一次采用" disabled><svg aria-hidden="true"><use href="#i-undo"/></svg></button>
+    <span class="divider" aria-hidden="true"></span>
+    <button id="sourceToolbar" class="plain"><svg aria-hidden="true"><use href="#i-book"/></svg><span>资料</span></button>
+    <button id="focusButton" class="plain" aria-pressed="false"><svg aria-hidden="true"><use href="#i-focus"/></svg><span>只看稿</span></button>
+    <button id="exportButton" class="plain"><svg aria-hidden="true"><use href="#i-export"/></svg><span>导出</span></button>
+  </div>
+</header>
+
+<main>
+  <div id="feedback" class="feedback" role="status" hidden>
+    <span id="feedbackText"></span>
+    <button id="dismissFeedback" class="icon-button" aria-label="关闭提示"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+  </div>
+
+  <div class="workspace" id="workspace">
+    <aside class="reference-margin" aria-label="当前参照的资料和笔记">
+      <div class="margin-caption"><span>当前段的身边</span><span>2</span></div>
+      <section class="reference-card annotation-card role-source">
+        <div class="annotation-mark" aria-hidden="true"></div>
+        <div class="role source"><svg aria-hidden="true"><use href="#i-book"/></svg>资料</div>
+        <h2>Data.Traversable</h2>
+        <p class="source-host">Haskell · base 4.15.0.0</p>
+        <pre class="signature">traverse ::
+  (Traversable t, Applicative f)
+  =&gt; (a -&gt; f b)
+  -&gt; t a -&gt; f (t b)</pre>
+        <p>把定义留在这里。需要时，回到原文看它的上下文。</p>
+        <button id="openSource" class="text-button">查看摘录与出处 <svg aria-hidden="true"><use href="#i-chevron"/></svg></button>
+      </section>
+
+      <section class="author-note annotation-card role-open">
+        <div class="annotation-mark" aria-hidden="true"></div>
+        <div class="role open"><svg aria-hidden="true"><use href="#i-note"/></svg>待决 · 我的笔记</div>
+        <p id="noteDisplay" class="muted">我想从“为什么 map 不够”开始，但还缺一个会失败的例子。</p>
+        <button id="editNote" class="text-button">编辑想法…</button>
+      </section>
+      <p class="margin-footnote">颜色只说明这条旁注扮演什么角色；<br>卡片仍然属于同一个写作现场。</p>
+    </aside>
+
+    <article class="paper" id="paper" aria-label="Markdown 文稿" tabindex="-1">
+      <div class="paper-topline"><span>随笔 / HASKELL</span><button id="topicDiscussion" class="text-button"><svg aria-hidden="true"><use href="#i-chat"/></svg>关于这篇</button></div>
+      <label for="articleTitle" class="sr-only">文章标题</label>
+      <input id="articleTitle" class="article-title" value="从 map 到 traverse" spellcheck="false">
+      <div class="document-subtitle" id="documentSubtitle">从一个小问题出发，理解效果的组合。</div>
+      <div id="blocks" class="blocks"></div>
+      <button id="addParagraph" class="text-button add-paragraph">＋ 继续写一段</button>
+      <footer class="paper-footer"><span id="wordCount"></span><span>Markdown</span></footer>
+    </article>
+
+    <aside class="discussion-margin" id="discussionMargin" aria-label="段旁讨论">
+      <div class="margin-caption"><span>当前段的讨论</span><span>已连接</span></div>
+      <div class="discussion-card annotation-card role-assist is-selected" id="discussionCard">
+        <div class="annotation-mark" aria-hidden="true"></div>
+        <header class="discussion-header">
+          <div><div class="role assistant"><svg aria-hidden="true"><use href="#i-chat"/></svg><span id="discussionScope">助手产出 · 段旁讨论</span></div><h2 id="discussionTitle">都是逐项处理，差别在哪？</h2></div>
+          <button id="closeDiscussion" class="icon-button" aria-label="收起讨论"><svg aria-hidden="true"><use href="#i-close"/></svg></button>
+        </header>
+        <button id="anchorQuote" class="anchor-quote" title="回到这段正文"></button>
+        <div class="turns" id="turns" aria-label="这次讨论的记录"></div>
+        <div class="generation" id="generation" role="status" hidden><span class="forming-orb" aria-hidden="true"></span><span>正在形成一张回答卡…</span><button id="cancelGeneration" class="text-button">取消</button></div>
+        <div class="discussion-actions"><button id="adoptButton" class="text-button">选择采用…</button><button id="noteFromDiscussion" class="text-button">记下想法…</button></div>
+        <div id="suggestions" class="suggestions" aria-label="示例问法"></div>
+        <form id="askForm" class="composer">
+          <label for="question" class="sr-only">继续追问</label>
+          <textarea id="question" rows="2" placeholder="继续问，或换个角度想…"></textarea>
+          <div class="composer-bottom">
+            <button type="button" id="scopeButton" class="scope-button" aria-expanded="false" aria-controls="scopeOptions">本次：当前段 + 资料</button>
+            <button type="submit" id="sendButton" class="send-button" aria-label="发送问题" title="发送问题（⌘/Ctrl + Enter）"><svg aria-hidden="true"><use href="#i-arrow"/></svg></button>
+          </div>
+          <fieldset id="scopeOptions" hidden><legend>本次参考哪些内容</legend><label><input type="radio" name="readScope" value="paragraph" checked> 当前段</label><label><input type="radio" name="readScope" value="article"> 这篇全文</label><label><input type="checkbox" id="includeSource" checked> Data.Traversable 摘录</label><p class="micro">只改变这次阅读范围，不修改正文。</p></fieldset>
+        </form>
+        <p class="demo-caption">AI 示例答复，仅用于体验交互。</p>
+      </div>
+
+      <details class="tension-card annotation-card role-tension">
+        <summary><span class="role tension"><svg aria-hidden="true"><use href="#i-tension"/></svg>张力</span><span>一个需要保留的反例</span><svg class="detail-chevron" aria-hidden="true"><use href="#i-chevron"/></svg></summary>
+        <div class="tension-body"><p>“把 effect 从元素外提”很直观，但 Maybe 的例子不足以说明 Applicative 为什么是最低要求。</p><button id="compareTension" class="text-button" type="button">在讨论中对照这一点</button></div>
+      </details>
+      <button id="reopenDiscussion" class="reopen-discussion" hidden><svg aria-hidden="true"><use href="#i-chat"/></svg>展开讨论</button>
+    </aside>
+  </div>
+
+  <div class="preview-footer">
+    <div class="role-legend" aria-label="旁注颜色说明">
+      <span><i class="source-dot"></i>资料</span><span><i class="open-dot"></i>待决</span><span><i class="assist-dot"></i>助手产出</span><span><i class="tension-dot"></i>张力</span>
+    </div>
+    <span>颜色只落在图标、标题、线与状态点。</span>
+    <button id="aboutButton" class="text-button">关于这版设计</button>
+  </div>
+</main>
+
+<dialog id="sourceDialog" aria-labelledby="sourceTitle">
+  <div class="dialog-header"><div><div class="role source">资料 · 预置示例</div><h2 id="sourceTitle">回到定义本身</h2></div><button data-close="sourceDialog" class="icon-button" aria-label="关闭资料"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <p class="muted">Data.Traversable · base 4.15.0.0</p>
+  <pre class="source-excerpt">traverse :: (Traversable t, Applicative f)
+         =&gt; (a -&gt; f b) -&gt; t a -&gt; f (t b)</pre>
+  <p>这是本原型预置的签名摘录。它保留类型信息；解释、例子与适用条件请对照完整文档。</p>
+  <a class="external-link" href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html" target="_blank" rel="noopener noreferrer">在新页面打开 Haskell 文档 ↗</a>
+  <div class="source-detail"><span>来源</span><span>hackage.haskell.org</span><span>阅读范围</span><span>签名摘录；未实时抓取整页</span></div>
+  <div class="dialog-footer"><button data-close="sourceDialog" class="secondary">回到写作</button></div>
+</dialog>
+
+<dialog id="adoptDialog" aria-labelledby="adoptTitle">
+  <div class="dialog-header"><div><div class="role assistant">来自旁边的讨论</div><h2 id="adoptTitle">选出想放进稿里的内容</h2></div><button data-close="adoptDialog" class="icon-button" aria-label="取消采用"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <p class="muted">可以只选一部分。确认前，正文保持原样。</p>
+  <div id="candidateChoices"></div>
+  <label class="field-label" for="insertPosition">放在哪里</label><select id="insertPosition"></select>
+  <details class="insert-preview"><summary>查看 Markdown 插入预览</summary><pre id="insertPreview"></pre></details>
+  <p id="adoptError" class="error" role="alert" hidden></p>
+  <div class="dialog-footer"><button data-close="adoptDialog" class="secondary">暂时留在旁边</button><button id="confirmAdopt" class="primary">插入正文</button></div>
+</dialog>
+
+<dialog id="noteDialog" aria-labelledby="noteTitle">
+  <div class="dialog-header"><div><div class="role open">待决 · 作者自己的文字</div><h2 id="noteTitle">留下一点想法</h2></div><button data-close="noteDialog" class="icon-button" aria-label="关闭笔记"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <label for="noteInput" class="field-label">我现在的想法</label><textarea id="noteInput" rows="5" placeholder="我准备从这个例子开始，因为…"></textarea>
+  <p class="muted">可空，也可以以后再改。不需要向 AI 解释你的选择。</p>
+  <div class="dialog-footer"><button data-close="noteDialog" class="secondary">取消</button><button id="saveNote" class="primary">留下这句</button></div>
+</dialog>
+
+<dialog id="aboutDialog" aria-labelledby="aboutTitle">
+  <div class="dialog-header"><h2 id="aboutTitle">Mosaic 组件语言如何进入写作现场</h2><button data-close="aboutDialog" class="icon-button" aria-label="关闭设计说明"><svg aria-hidden="true"><use href="#i-close"/></svg></button></div>
+  <p>这版沿用 Mosaic 的圆角、间距、按钮、选中态、面板和提示层级，同时保留 WriteField 的暖白纸面与长文排版。相近的是组件语法，不是无限画布。</p>
+  <p>旁注只分为四个稳定角色：资料、待决、助手产出、张力。颜色落在窄标记、图标、标题与连接线上；卡面保持中性。选中态统一使用系统强调蓝，因此不会把“助手产出色”误当成“当前选中”。</p>
+  <p>正文编辑仍不会触发 AI。示例问法只生成旁边的回答，必须由作者打开“选择采用”并确认，文字才会进入正文。</p>
+  <a href="第一轮具体设计说明.md">阅读设计取舍与检查范围</a>
+  <div class="dialog-footer"><button data-close="aboutDialog" class="primary">开始体验</button></div>
+</dialog>
+</body>
+</html>

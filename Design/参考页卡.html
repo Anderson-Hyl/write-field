@@ -1,0 +1,287 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>写作现场 · 参考页卡</title>
+<style>
+:root {
+  --bg: #E6E2DA; --ink: #1A1916; --muted: #6B6560; --line: #D4CDC3;
+  --desk: #C9C3B8; --paper: #FFFEFA; --card: #FFFEFA; --bezel: #B8B2A8;
+  --src: #007AFF; --src-ink: #0055C8; --hi: #2C6BED;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121110; --ink: #F2EFE8; --muted: #9A948A; --line: #3A3630;
+    --desk: #2A2824; --paper: #2B2A28; --card: #2B2A28; --bezel: #3A3630;
+    --src: #0A84FF; --src-ink: #6EB0FF; --hi: #6EA0F0;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "PingFang SC", system-ui, sans-serif;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 96px; }
+.nav {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px;
+  font: 500 12px/1 ui-monospace, Menlo, monospace;
+}
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a[aria-current="page"] { color: var(--ink); }
+.eyebrow {
+  font: 500 11px/1 ui-monospace, Menlo, monospace;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+}
+h1 { font-size: 26px; font-weight: 600; margin: 10px 0 8px; }
+.lead { color: var(--muted); max-width: 48em; }
+.reco {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 16px; margin: 14px 0 18px; max-width: 52em; font-size: 14px;
+}
+.how { display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px; }
+.how button {
+  font: 500 13px/1 -apple-system, "PingFang SC", sans-serif;
+  border-radius: 8px; border: 1px solid var(--line);
+  background: var(--card); color: var(--ink); padding: 10px 14px;
+  cursor: pointer; min-height: 44px;
+}
+.how button[aria-pressed="true"] {
+  border-color: var(--hi);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--hi) 35%, transparent);
+}
+.device {
+  width: 100%; aspect-ratio: 1194 / 834; max-width: 1100px;
+  background: var(--bezel); border-radius: 22px; padding: 10px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.14);
+}
+.screen {
+  position: relative; height: 100%; border-radius: 12px;
+  background: var(--desk); overflow: hidden;
+}
+.paper {
+  position: absolute; left: 50%; top: 40px; bottom: 28px; width: 42%;
+  transform: translateX(-50%); z-index: 1;
+  background: var(--paper); border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 10px 28px rgba(0,0,0,.08);
+  padding: 32px 36px 24px;
+  font-family: "Iowan Old Style", Palatino, "Songti SC", serif;
+  font-size: clamp(12px, 1.15vw, 15px); line-height: 1.7;
+  overflow: auto;
+}
+.paper h2 { font-size: 1.45em; font-weight: 400; margin: 0 0 .6em; }
+.paper p { margin: 0 0 .75em; }
+.paper mark {
+  background: color-mix(in srgb, var(--src) 18%, transparent);
+  color: inherit; border-radius: 2px; padding: 0 .15em;
+}
+.ref {
+  position: absolute; left: 2.5%; top: 12%; bottom: 12%; width: 26%;
+  z-index: 3; display: flex; flex-direction: column;
+  background: var(--card); border: 1px solid rgba(0,0,0,.08); border-radius: 4px;
+  box-shadow: 0 10px 28px rgba(0,0,0,.08);
+  overflow: hidden;
+  transition: opacity .2s, transform .2s;
+}
+@media (prefers-color-scheme: dark) {
+  .ref { border-color: rgba(255,255,255,.08); }
+}
+.ref.collapsed {
+  top: auto; bottom: 18%; height: 44px; width: 44px; left: 4%;
+  border-radius: 22px; cursor: pointer;
+}
+.ref.collapsed .bar, .ref.collapsed .body, .ref.collapsed .clip { display: none; }
+.ref.collapsed::after {
+  content: ""; position: absolute; inset: 12px; border-radius: 50%;
+  background: var(--src); box-shadow: 0 0 10px color-mix(in srgb, var(--src) 40%, transparent);
+}
+.ref.reading-wide { left: 10%; width: 80%; top: 5%; bottom: 5%; }
+.ref.reading-wide .body { font-size: 15px; }
+.bar { flex-wrap: wrap; }
+.bar button { min-height: 44px; }
+.hit:focus-visible { outline: 2px solid var(--src); outline-offset: 2px; }
+.bar {
+  flex: none; display: flex; align-items: center; gap: 6px;
+  padding: 6px 8px; border-bottom: 1px solid var(--line);
+  font-size: 11px; color: var(--muted);
+}
+.bar .role { color: var(--src); font-weight: 500; margin-right: auto; }
+.bar button {
+  border: 0; background: transparent; color: var(--ink); cursor: pointer;
+  min-width: 44px; min-height: 44px; border-radius: 6px;
+  font: 500 11px/1 -apple-system, "PingFang SC", sans-serif;
+}
+.bar button:hover { background: color-mix(in srgb, var(--src) 12%, transparent); }
+.bar button:disabled { opacity: .4; cursor: default; }
+.body {
+  flex: 1; overflow: auto; padding: 12px 14px;
+  font: 12px/1.5 ui-monospace, Menlo, monospace;
+  background: color-mix(in srgb, var(--desk) 35%, var(--card));
+}
+.body .url { color: var(--muted); font-size: 10px; margin-bottom: 10px; word-break: break-all; }
+.body .hit {
+  background: var(--card); border: 1px solid var(--line); border-radius: 6px;
+  padding: 10px; margin-bottom: 8px; cursor: text;
+}
+.body .hit.sel {
+  outline: 2px solid color-mix(in srgb, var(--src) 55%, transparent);
+}
+.body .nm { color: var(--src-ink); font-weight: 600; }
+.body .sig { margin-top: 4px; }
+.body .pkg { margin-top: 6px; color: var(--muted); font-size: 10px; }
+.clip {
+  position: absolute; right: 3%; top: 36%; width: 20%; min-width: 170px;
+  background: var(--card); border: 1px solid rgba(0,0,0,.08); border-radius: 4px;
+  padding: 10px 12px; font: 12px/1.45 -apple-system, "PingFang SC", sans-serif;
+  box-shadow: 0 8px 20px rgba(0,0,0,.07); display: none;
+}
+.clip.show { display: block; }
+.clip .k { color: var(--src); font-size: 11px; }
+.clip .t { font-weight: 500; margin-top: 2px; }
+.clip .q { margin-top: 4px; color: var(--muted); font-size: 11px; }
+.toast {
+  position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%);
+  background: var(--ink); color: var(--paper); font-size: 12px;
+  padding: 8px 14px; border-radius: 8px; opacity: 0; transition: opacity .2s;
+}
+.toast.show { opacity: .92; }
+.notes { margin-top: 18px; max-width: 52em; font-size: 13px; color: var(--muted); }
+.notes li { margin-bottom: 6px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="ai-入口地图.html">入口地图</a>
+    <a href="回填选择.html">回填</a>
+    <a href="参考页卡.html" aria-current="page">参考页</a>
+    <a href="ai-上下文与姿态.html">上下文</a>
+  </nav>
+  <p class="eyebrow">AI UX · Plate 9 · 入口 A→资料</p>
+  <h1>参考页卡 · 不是 Web tile</h1>
+  <p class="lead">段旁锚定一页（如 Hoogle）。作者可刷新；剪取后才变成可引用的资料卡。禁止无手势把整页塞进 AI。</p>
+  <div class="reco">离线示意：点选结果 → <b>剪取</b>；窄卡读不下时点<b>放大阅读</b>。本板没有真实网页或网络请求，刷新只模拟界面状态；仅展示最近一次剪取。</div>
+
+  <div class="how">
+    <button type="button" id="btnExpand" aria-pressed="true">展开参考页</button>
+    <button type="button" id="btnCollapse" aria-pressed="false">收起为端口</button>
+  </div>
+
+  <div class="device">
+    <div class="screen">
+      <aside class="ref" id="ref" aria-label="参考页卡">
+        <div class="bar">
+          <span class="role">资料 · 参考页</span>
+          <button type="button" id="btnReload" title="本板不发网络请求">模拟刷新</button>
+          <button type="button" id="btnRead" aria-pressed="false">放大阅读</button>
+          <button type="button" id="btnClip" disabled title="先点选一条结果">剪取</button>
+          <button type="button" id="btnClose">收起</button>
+        </div>
+        <div class="body" id="webBody">
+          <div class="url" id="url">https://hoogle.haskell.org/?hoogle=traverse</div>
+          <div class="hit" role="button" aria-pressed="false" data-sig="traverse :: (Traversable t, Applicative f) => (a -> f b) -> t a -> f (t b)" tabindex="0">
+            <div class="nm">traverse</div>
+            <div class="sig">(Traversable t, Applicative f) => (a -> f b) -> t a -> f (t b)</div>
+            <div class="pkg">base · Data.Traversable</div>
+          </div>
+          <div class="hit" role="button" aria-pressed="false" data-sig="traverse_ :: (Foldable t, Applicative f) => (a -> f b) -> t a -> f ()" tabindex="0">
+            <div class="nm">traverse_</div>
+            <div class="sig">(Foldable t, Applicative f) => (a -> f b) -> t a -> f ()</div>
+            <div class="pkg">base · Data.Foldable</div>
+          </div>
+          <div class="hit" role="button" aria-pressed="false" data-sig="mapM :: (Traversable t, Monad m) => (a -> m b) -> t a -> m (t b)" tabindex="0">
+            <div class="nm">mapM</div>
+            <div class="sig">(Traversable t, Monad m) => (a -> m b) -> t a -> m (t b)</div>
+            <div class="pkg">Data.Traversable · Monad 约束下的遍历</div>
+          </div>
+        </div>
+      </aside>
+
+      <div class="paper" id="paper">
+        <h2>Traversable</h2>
+        <p>写到类型时，纸上选中了 <mark>traverse</mark>，侧边打开参考页——不必切去系统浏览器。</p>
+        <p>页面是活的；只有你剪下来的句子，才能进引用或下次 AI 读窗。</p>
+        <p style="color:var(--muted);font-size:.92em">（此区可单独滚动，用来感受与参考页的双滚动关系。）</p>
+        <p>……</p><p>……</p><p>……</p><p>……</p><p>……</p>
+      </div>
+
+      <div class="clip" id="clipCard">
+        <div class="k">资料</div>
+        <div class="t" id="clipText">traverse :: …</div>
+        <div class="q">剪藏示例 · hoogle.haskell.org · 未进行实际剪藏</div>
+      </div>
+
+      <div class="toast" id="toast" role="status"></div>
+    </div>
+  </div>
+
+  <ul class="notes">
+    <li>工具条刻意薄：角色名 + 刷新 + 剪取 + 收起——不要做成 Safari 地址栏全家桶。</li>
+    <li>刷新失败应明示；本板仅展示作者动作，不声称已联网重载。</li>
+    <li>同时只宜展开一张参考页；其余收成资料色端口。</li>
+    <li>若双滚动在真机难用 → 降级「外开 + 剪回」（产品已记异议）。</li>
+  </ul>
+</div>
+<script>
+const ref = document.getElementById('ref');
+const clipCard = document.getElementById('clipCard');
+const clipText = document.getElementById('clipText');
+const btnClip = document.getElementById('btnClip');
+const toast = document.getElementById('toast');
+const url = document.getElementById('url');
+let selected = null;
+let t;
+
+function flash(msg) {
+  toast.textContent = msg;
+  toast.classList.add('show');
+  clearTimeout(t);
+  t = setTimeout(() => toast.classList.remove('show'), 1500);
+}
+
+function setExpanded(on) {
+  if (!on) { ref.classList.remove('reading-wide'); document.getElementById('btnRead').textContent = '放大阅读'; document.getElementById('btnRead').setAttribute('aria-pressed', 'false'); }
+  ref.classList.toggle('collapsed', !on);
+  document.getElementById('btnExpand').setAttribute('aria-pressed', on ? 'true' : 'false');
+  document.getElementById('btnCollapse').setAttribute('aria-pressed', on ? 'false' : 'true');
+  if (!on) clipCard.classList.remove('show');
+}
+
+document.getElementById('btnExpand').onclick = () => setExpanded(true);
+document.getElementById('btnCollapse').onclick = () => setExpanded(false);
+document.getElementById('btnClose').onclick = () => setExpanded(false);
+document.getElementById('btnRead').onclick = () => {
+  const wide = ref.classList.toggle('reading-wide');
+  document.getElementById('btnRead').textContent = wide ? '回到段旁' : '放大阅读';
+  document.getElementById('btnRead').setAttribute('aria-pressed', String(wide));
+};
+ref.addEventListener('click', (e) => {
+  if (ref.classList.contains('collapsed')) setExpanded(true);
+});
+
+document.querySelectorAll('.hit').forEach(hit => {
+  hit.addEventListener('click', () => {
+    document.querySelectorAll('.hit').forEach(h => { h.classList.remove('sel'); h.setAttribute('aria-pressed', 'false'); });
+    hit.classList.add('sel');
+    hit.setAttribute('aria-pressed', 'true');
+    selected = hit;
+    btnClip.disabled = false;
+  });
+  hit.addEventListener('keydown', e => {
+    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); hit.click(); }
+  });
+});
+
+btnClip.addEventListener('click', () => {
+  if (!selected) return;
+  clipText.textContent = selected.dataset.sig;
+  clipCard.classList.add('show');
+  flash('已显示剪藏示例 · 没有自动送给 AI');
+});
+
+document.getElementById('btnReload').addEventListener('click', () => {
+  flash('刷新动作示意 · 本板没有网络请求，既有剪取保持原样');
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>写作现场 · 本次阅读范围</title><link rel="stylesheet" href="writing-prototype.css"></head>
+<body><main class="wrap">
+<nav class="nav"><a href="一次写作.html">一次写作</a><a href="回填选择.html">采用与引用</a><a href="参考页卡.html">参考页</a><a href="ai-上下文与姿态.html" aria-current="page">本次阅读范围</a><a href="ai-入口地图.html">入口地图</a></nav>
+<div class="eyebrow">WriteField · 上下文交互提案</div><h1>让 AI 看见这次问题需要的内容</h1><p class="lead">问一句，就读这一段；对照目标与验收，就选这两节；想通读时，明确带上全文。</p>
+<p class="demo-note">待讨论原型 · 演示本次请求范围与历史版本，未连接模型。替代“渐进 / 策展 / 全量 + 包已旧”的交互建议尚未成为工程定案。请求回执只保留在本页内存。</p>
+<div class="desk"><div class="scene">
+<aside class="margin"><section class="card"><div class="role open">○ 这篇想交付什么</div><label for="intent">给助手的写作意图（可空）</label><textarea id="intent" placeholder="写给谁，想讲清楚什么，哪些边界要守住……"></textarea><button id="saveIntent">保存意图</button><p id="intentSaved" class="small">未设置；可以直接提问。</p></section>
+<section class="card"><div class="role source">↗ 可带上的资料</div><h3>现有运行时边界</h3><p id="sourceText">Attention / MRU 是运行时状态，重启后不能把旧 waiting 当成当前状态。</p><p class="small">固定演练摘录 · 来源为本地 Mosaic handoff；未与发布版本核对。</p><a href="../research/simulations/mosaic-resume-note-prd.md">查看演练依据</a></section></aside>
+<article class="paper"><div class="paper-label">这篇稿 · <span id="revision">版本 1</span></div><h2>Mosaic · 下次继续</h2><label for="body" class="small">可编辑正文；下次请求读取你选定内容的当前版本</label><textarea id="body" class="manuscript" spellcheck="false">## 目标
+
+回来时找到自己留下的下一步，并由自己决定是否跳到关联对象。
+
+## 非目标
+
+不自动总结，不恢复进程状态，不执行便笺里的命令。
+
+## 验收
+
+目标已删除时保留便笺，提示重新指定；不能跳到同名对象。</textarea><footer>改稿不会触发 AI，也不会改变以前请求的快照。</footer></article>
+<aside class="margin"><section class="card"><div class="role">✧ 本次提问</div><div class="actions"><button id="compare">对照目标与验收</button><button id="readAll">通读这篇</button></div>
+<form id="requestForm"><label for="question">我想问</label><textarea id="question" required placeholder="这里有没有两种不同的理解？"></textarea>
+<fieldset><legend>这次允许阅读</legend><label class="choice"><input type="radio" name="scope" value="local" checked>当前段 / 稿内选区</label><label class="choice"><input type="radio" name="scope" value="selected">我选的章节</label><label class="choice"><input type="radio" name="scope" value="full">这篇全文</label></fieldset>
+<div id="sections" hidden></div><label class="choice"><input id="includeSource" type="checkbox">带上左侧资料</label><p class="small" id="scopeSummary"></p><button type="submit">确认范围，演示请求</button></form><p class="small">未连接模型。此按钮仅生成可核对的本次请求快照。</p></section></aside>
+</div></div><p class="status" id="status" role="status"></p>
+<section class="design-notes"><h2>这次实际读了什么</h2><p class="small">保留发出时的文字与作者意图；后续编辑不会悄悄改写记录。</p><div id="requests" class="request-history"><p class="empty">还没有请求。</p></div></section>
+<details class="design-notes"><summary>本页改变的规则</summary><ul><li>范围随这次问题选择；全文请求结束后回到当前段，避免无意持续发送全文。</li><li>作者选定范围内，下次提问取最新文字。输入与改稿本身不调用 AI。</li><li>作者意图可空；明确保存才应用，未保存的输入不会悄悄进请求。</li><li>章节删除或改名后不猜匹配，重新选择。这里用标题作为演示选择键，不代表最终锚点方案。</li><li>实际模型接入还需处理预算与明确披露省略的内容；此板不伪造模型回执或审阅结论。</li></ul></details>
+</main><script>
+'use strict';
+const $=id=>document.getElementById(id);let savedIntent='',revision=1,count=0,composing=false;let selected=new Set(['目标','验收']);
+function scope(){return document.querySelector('input[name=scope]:checked').value;}
+function chapters(){const text=$('body').value;const matches=[...text.matchAll(/^## (.+)$/gm)];return matches.map((m,i)=>({name:m[1],text:text.slice(m.index,matches[i+1]?.index??text.length).trim()}));}
+function selection(){const t=$('body'),text=t.value,a=t.selectionStart,b=t.selectionEnd;if(a!==b)return text.slice(a,b);const start=text.lastIndexOf('\n\n',Math.max(0,a-1));const end=text.indexOf('\n\n',a);return text.slice(start<0?0:start+2,end<0?text.length:end).trim();}
+function renderSections(){const root=$('sections');root.replaceChildren();for(const section of chapters()){const label=document.createElement('label');label.className='choice';const box=document.createElement('input');box.type='checkbox';box.value=section.name;box.checked=selected.has(section.name);box.onchange=()=>{box.checked?selected.add(section.name):selected.delete(section.name);summarize();};label.append(box,document.createTextNode(section.name));root.append(label);}for(const name of selected){if(chapters().some(c=>c.name===name))continue;const label=document.createElement('label');label.className='choice';const box=document.createElement('input');box.type='checkbox';box.checked=true;box.onchange=()=>{selected.delete(name);renderSections();summarize();};label.append(box,document.createTextNode(name+'（已删除或改名，请取消后重新选择）'));root.append(label);}}
+function summarize(){const mode=scope();$('sections').hidden=mode!=='selected';const names=chapters().filter(c=>selected.has(c.name)).map(c=>c.name);$('scopeSummary').textContent='本次阅读：'+(mode==='full'?'全文':mode==='selected'?(names.join('、')||'尚未选择章节'):'当前段或选区')+($('includeSource').checked?' + 1 份资料':'')+(savedIntent?' + 已保存意图':'')+'。';}
+function choose(value){document.querySelector('input[name=scope][value='+value+']').checked=true;summarize();}
+document.querySelectorAll('[name=scope]').forEach(r=>r.onchange=summarize);$('includeSource').onchange=summarize;
+$('saveIntent').onclick=()=>{savedIntent=$('intent').value.trim();$('intentSaved').textContent=savedIntent?'已保存：'+savedIntent:'未设置；可以直接提问。';summarize();};
+$('compare').onclick=()=>{$('question').value='对照目标与验收，指出承诺是否一致，以及还没说清楚的边界。';selected=new Set(['目标','验收']);renderSections();choose('selected');};
+$('readAll').onclick=()=>{$('question').value='请通读这篇 PRD，从接手实现的人的角度指出仍有多种解释的地方。';choose('full');};
+function edited(){revision++;$('revision').textContent='版本 '+revision;renderSections();summarize();}
+$('body').oninput=()=>{if(!composing)edited();};$('body').addEventListener('compositionstart',()=>composing=true);$('body').addEventListener('compositionend',()=>{composing=false;edited();});
+$('requestForm').onsubmit=e=>{e.preventDefault();if(composing){$('status').textContent='先完成正在输入的文字。';return;}const question=$('question').value.trim();if(!question)return;const mode=scope();if(mode==='selected'){const missing=[...selected].filter(name=>!chapters().some(c=>c.name===name));if(missing.length){$('status').textContent='这些章节已改名或删除，请重新选择：'+missing.join('、');return;}const names=chapters().filter(c=>selected.has(c.name)).map(c=>c.name);if(new Set(names).size!==names.length){$('status').textContent='所选标题有重名，请改用稿内选区或全文；本板不猜章节归属。';return;}}let text=mode==='full'?$('body').value:mode==='local'?selection():chapters().filter(c=>selected.has(c.name)).map(c=>c.text).join('\n\n');if(!text.trim()){$('status').textContent='所选范围没有文字，请重新选择。';return;}const receipt={question,scope:mode,revision,body:text,intent:savedIntent,source:$('includeSource').checked?$('sourceText').textContent:null};if(count===0)$('requests').replaceChildren();const detail=document.createElement('details');detail.open=true;const summary=document.createElement('summary');summary.textContent='请求 '+(++count)+' · 版本 '+revision+' · '+({local:'当前段 / 选区',selected:'所选章节',full:'全文'}[mode]);const content=document.createElement('pre');content.textContent='问题：'+receipt.question+'\n\n意图：'+(receipt.intent||'未设置')+'\n\n正文：\n'+receipt.body+(receipt.source?'\n\n附带资料：\n'+receipt.source:'');detail.append(summary,content);$('requests').prepend(detail);choose('local');$('includeSource').checked=false;summarize();$('status').textContent='已保存本次阅读快照；未调用模型。下一次默认只读当前段。';};
+renderSections();summarize();
+</script></body></html>

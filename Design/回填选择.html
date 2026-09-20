@@ -1,0 +1,50 @@
+<!doctype html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>写作现场 · 采用与引用</title><link rel="stylesheet" href="writing-prototype.css"></head>
+<body><main class="wrap">
+<nav class="nav"><a href="一次写作.html">一次写作</a><a href="回填选择.html" aria-current="page">采用与引用</a><a href="参考页卡.html">参考页</a><a href="ai-上下文与姿态.html">本次阅读范围</a><a href="ai-入口地图.html">入口地图</a></nav>
+<div class="eyebrow">WriteField · 采用交互提案</div><h1>想清楚以后，选自己需要的部分</h1><p class="lead">可以参照着写，选一句采用，或暂时留在旁边。引用始终回到原始资料。</p>
+<p class="demo-note">离线交互板 · 固定助手候选与资料摘录均为演示数据，未调用模型、未执行实时剪藏。可编辑稿、选择卡内文字、预览插入、撤销。刷新不保存。</p>
+<div class="toolbar"><span class="small">卡片示例</span><button data-kind="asserted" aria-pressed="true">助手候选 · 无引用来源</button><button data-kind="clipped" aria-pressed="false">资料摘录 · 含来源</button><span class="spacer"></span><button id="undo" disabled>撤销最近一次采用</button></div>
+<div class="desk"><div class="scene">
+<aside class="margin"><section class="card"><div class="role open">○ 写到这里的问题</div><h3>这句话的适用范围是什么？</h3><p>“整体失败”是当前 Maybe 例子的行为。需要分清楚实例、定义与自己的解释。</p><a href="一次写作.html">回到连续讨论</a></section></aside>
+<article class="paper"><div class="paper-label">这篇稿 · MARKDOWN</div><h2>从 fmap 到 traverse</h2><label for="body" class="small">先在稿里放置光标，再选择采用内容</label><textarea class="manuscript" id="body" spellcheck="false"># 从 fmap 到 traverse
+
+逐项解析，和得到一份完整的解析结果，是两种不同的需求。
+</textarea><footer>可手写；采用动作在光标或已有选区之后插入，不替换已有文字。</footer></article>
+<aside class="margin"><section class="card" id="card"><div class="role" id="role"></div><h3 id="cardTitle"></h3><label for="cardText">卡片原文（可选取文字）</label><textarea id="cardText" readonly rows="9"></textarea><p class="small" id="provenance"></p><a id="sourceLink" hidden href="https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html">查看原始文档</a><p class="small" id="used">尚未采用。</p><div class="actions"><button id="partial">采用选中片段…</button><button id="whole">采用整块…</button><button id="footnote" disabled>引用这份资料…</button><button id="rewrite">参照着自己写</button><button id="keep">暂时不用</button></div><p class="small" id="citeHint">助手解释没有引用来源，可以作为候选；不能变成脚注。</p></section></aside>
+</div></div><p class="status" id="status" role="status"></p>
+<details class="design-notes"><summary>本页改变的规则</summary><ul><li>无来源候选无法生成脚注；来源摘录才有引用动作。来源存在不表示论断已获验证。</li><li>部分采用有实际选区与预览；取消不改稿。</li><li>记录“采用了部分 / 整块 / 引用”，不因为选了一句就把整张卡判断为完成。</li><li>无需通过理解测验才能采用；作者可以选择参照、质疑、拒绝或直接插入。</li><li>插入后的新手写内容不会被“撤销采用”覆盖；此时按钮停用。</li></ul></details>
+<dialog id="preview" aria-labelledby="previewTitle"><h2 id="previewTitle">预览采用</h2><p id="location"></p><pre id="previewText"></pre><div class="actions"><button id="cancel">取消</button><button id="confirm">确认插入</button></div></dialog>
+</main><script>
+'use strict';
+const $=id=>document.getElementById(id);
+const url='https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html';
+const cards={
+ asserted:{title:'把解释收窄到这个例子',text:'在这个 Maybe 例子里，traverse 将逐项解析组合成一个整体结果。\n\n只要某一项得到 Nothing，整体结果就是 Nothing。\n\n这不意味着所有 Applicative 都采用相同的失败处理方式。',provenance:'助手候选 · asserted · 无引用来源'},
+ clipped:{title:'traverse 的类型',text:'traverse :: Applicative f => (a -> f b) -> t a -> f (t b)',provenance:'资料示例 · clipped · Data.Traversable · base 4.15.0.0'}
+};
+let kind='asserted',pending=null,undo=null,composing=false;const used={asserted:[],clipped:[]},aside={asserted:false,clipped:false};
+function message(text){$('status').textContent=text;}
+function render(){const c=cards[kind];$('cardTitle').textContent=c.title;$('cardText').value=c.text;$('role').textContent=kind==='asserted'?'✧ 助手产出':'↗ 资料摘录';$('role').className=kind==='asserted'?'role':'role source';$('provenance').textContent=c.provenance;$('sourceLink').hidden=kind==='asserted';$('footnote').disabled=kind==='asserted'||aside[kind];$('citeHint').textContent=kind==='asserted'?'助手解释没有引用来源，可以作为候选；不能变成脚注。':'引用保留文档标题与 URL；请自行判断这份资料是否支持正文的说法。';$('used').textContent=used[kind].length?'采用记录：'+used[kind].join('、'):'尚未采用。';$('card').classList.toggle('is-set-aside',aside[kind]);$('keep').textContent=aside[kind]?'重新拿来参照':'暂时不用';['partial','whole'].forEach(id=>$(id).disabled=aside[kind]);document.querySelectorAll('[data-kind]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.kind===kind)));}
+document.querySelectorAll('[data-kind]').forEach(b=>b.onclick=()=>{kind=b.dataset.kind;render();});
+function prepare(action){
+ if(composing){message('先完成正在输入的文字。');return;}
+ if(action==='footnote'&&kind!=='clipped'){message('这张卡没有引用来源。');return;}
+ const body=$('body').value,at=$('body').selectionEnd;
+ let text=cards[kind].text,label=action==='partial'?'部分':action==='whole'?'整块':'引用';
+ if(action==='partial'){const t=$('cardText');text=t.value.slice(t.selectionStart,t.selectionEnd);if(!text){message('先在卡片原文中选中想采用的文字。');t.focus();return;}}
+ let after,preview;
+ if(action==='footnote'){let n=1;while(body.includes('[^source-'+n+']'))n++;const key='source-'+n;const ref='[^'+key+']',definition='\n\n'+ref+': [Data.Traversable · base 4.15.0.0]('+url+')\n';after=body.slice(0,at)+ref+body.slice(at)+definition;preview=ref+definition;}
+ else{const chunk='\n\n'+text+'\n\n';after=body.slice(0,at)+chunk+body.slice(at);preview=text;}
+ pending={before:body,after,kind,label,at};$('previewText').textContent=preview;$('location').textContent='第 '+body.slice(0,at).split('\n').length+' 行，光标或选区之后。已有文字保留。';$('preview').showModal();
+}
+$('partial').onclick=()=>prepare('partial');$('whole').onclick=()=>prepare('whole');$('footnote').onclick=()=>prepare('footnote');
+$('cancel').onclick=()=>$('preview').close();
+$('confirm').onclick=()=>{if(!pending||$('body').value!==pending.before){$('preview').close();message('稿已变化，请重新选择位置。');return;}undo={...pending,previous:[...used[pending.kind]]};$('body').value=pending.after;used[pending.kind].push(pending.label);$('undo').disabled=false;$('preview').close();render();message('已按你的选择插入，可以撤销。');};
+$('undo').onclick=()=>{if(!undo||$('body').value!==undo.after)return;$('body').value=undo.before;used[undo.kind]=undo.previous;undo=null;$('undo').disabled=true;render();message('已还原采用前的稿与采用记录。');};
+function invalidateUndo(){undo=null;$('undo').disabled=true;}
+$('body').addEventListener('compositionstart',()=>composing=true);$('body').addEventListener('compositionend',()=>{composing=false;invalidateUndo();});$('body').oninput=()=>{if(!composing)invalidateUndo();};
+$('rewrite').onclick=()=>{$('body').focus();message('卡仍在旁边。按自己的理解写即可。');};
+$('keep').onclick=()=>{aside[kind]=!aside[kind];render();message(aside[kind]?'暂时收起采用动作，讨论材料仍保留。':'已重新拿来参照。');};
+render();
+</script></body></html>

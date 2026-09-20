@@ -1,0 +1,501 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>写作现场 · 召唤球</title>
+<style>
+:root {
+  --bg: #E6E2DA; --ink: #1A1916; --muted: #6B6560; --line: #D4CDC3;
+  --desk: #C9C3B8; --paper: #FFFEFA; --card: #FFFEFA; --bezel: #B8B2A8;
+  --open: #C47B17; --assist: #5B7C8A; --hi: #2C6BED;
+  --ai1: #0894FF; --ai2: #C959DD; --ai3: #FF2E54; --ai4: #FF9004;
+}
+@media (prefers-color-scheme: dark) {
+  :root {
+    --bg: #121110; --ink: #F2EFE8; --muted: #9A948A; --line: #3A3630;
+    --desk: #2A2824; --paper: #2B2A28; --card: #2B2A28; --bezel: #3A3630;
+    --open: #E0A03A; --assist: #7A9AAA; --hi: #6EA0F0;
+  }
+}
+* { box-sizing: border-box; }
+body {
+  margin: 0; background: var(--bg); color: var(--ink);
+  font: 15px/1.6 -apple-system, BlinkMacSystemFont, "PingFang SC", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+.wrap { max-width: 1180px; margin: 0 auto; padding: 28px 24px 96px; }
+.nav {
+  display: flex; gap: 16px; flex-wrap: wrap; margin-bottom: 18px;
+  font: 500 12px/1 ui-monospace, Menlo, monospace;
+}
+.nav a { color: var(--muted); text-decoration: none; }
+.nav a[aria-current="page"] { color: var(--ink); }
+.eyebrow {
+  font: 500 11px/1 ui-monospace, Menlo, monospace;
+  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
+}
+h1 { font-size: 26px; font-weight: 600; margin: 10px 0 8px; text-wrap: balance; }
+.lead { color: var(--muted); max-width: 48em; margin: 0 0 10px; }
+.reco {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 16px; margin: 0 0 16px; max-width: 52em; font-size: 14px;
+}
+.reco b { color: var(--hi); }
+.hint {
+  font-size: 13px; color: var(--muted); margin: 0 0 14px; max-width: 52em;
+}
+.device {
+  width: 100%; aspect-ratio: 1194 / 834; max-width: 1100px;
+  background: var(--bezel); border-radius: 22px; padding: 10px;
+  box-shadow: 0 18px 40px rgba(0,0,0,.14);
+  touch-action: none; user-select: none;
+}
+.screen {
+  position: relative; height: 100%; border-radius: 12px;
+  background: var(--desk); overflow: hidden;
+}
+.paper {
+  position: absolute; left: 50%; top: 44px; bottom: 28px; width: 44%;
+  transform: translateX(-50%); z-index: 1;
+  background: var(--paper); border-radius: 2px;
+  box-shadow: 0 1px 3px rgba(0,0,0,.08), 0 10px 28px rgba(0,0,0,.08);
+  padding: 32px 36px 24px;
+  font-family: "Iowan Old Style", Palatino, "Songti SC", serif;
+  font-size: clamp(13px, 1.2vw, 15px); line-height: 1.7;
+  pointer-events: none;
+}
+.paper h2 { font-size: 1.4em; font-weight: 400; margin: 0 0 .55em; }
+.paper p { margin: 0 0 .7em; }
+.paper .here { position: relative; }
+.paper .here::before {
+  content: ""; position: absolute; left: -12px; top: 2px; bottom: 2px; width: 2px;
+  background: var(--open); border-radius: 1px;
+}
+.handle {
+  position: absolute; z-index: 4;
+  right: calc(28% - 6px); top: 48%;
+  width: 14px; height: 64px; border-radius: 8px 0 0 8px;
+  background: color-mix(in srgb, var(--open) 50%, var(--paper));
+  cursor: grab; touch-action: none;
+}
+.handle:active { cursor: grabbing; }
+.note {
+  position: absolute; z-index: 3; right: 3.5%; top: 28%; width: 18%; min-width: 150px;
+  background: var(--card); border: 1px solid rgba(0,0,0,.08); border-radius: 4px;
+  padding: 10px 12px 22px; font: 12px/1.4 -apple-system, "PingFang SC", sans-serif;
+  box-shadow: 0 6px 16px rgba(0,0,0,.06);
+  cursor: grab; touch-action: none;
+  transition: box-shadow .15s, border-color .15s;
+}
+.note:hover, .note.hover {
+  border-color: color-mix(in srgb, var(--assist) 45%, transparent);
+  box-shadow: 0 0 0 1px color-mix(in srgb, var(--assist) 22%, transparent),
+    0 10px 22px rgba(0,0,0,.08);
+}
+.note:active { cursor: grabbing; }
+.note.editing {
+  cursor: text;
+  border-color: var(--hi);
+  box-shadow: 0 0 0 2px color-mix(in srgb, var(--hi) 35%, transparent);
+}
+.note .hint {
+  position: absolute; left: 12px; right: 12px; bottom: 5px;
+  font: 500 10px/1 -apple-system, "PingFang SC", sans-serif;
+  color: var(--muted); opacity: 0; transition: opacity .12s;
+  pointer-events: none;
+}
+.note:hover .hint, .note.hover .hint { opacity: 1; }
+.note.editing .hint { display: none; }
+.note .body { outline: none; min-height: 1.2em; }
+@media (prefers-color-scheme: dark) {
+  .note { border-color: rgba(255,255,255,.08); }
+}
+.note .k { color: var(--assist); font-size: 11px; }
+.note.target {
+  outline: 2px solid color-mix(in srgb, var(--hi) 40%, transparent);
+}
+.orb {
+  position: absolute; z-index: 5;
+  width: 52px; height: 52px; border-radius: 50%;
+  left: 8%; top: 42%;
+  /* 占位质感：正式应对齐 Design/ai-orb.mp4 玻璃虹彩，非此锥形渐变 */
+  background: conic-gradient(from 20deg, var(--ai1), var(--ai2), var(--ai4), var(--ai1));
+  box-shadow: 0 0 14px color-mix(in srgb, var(--ai1) 30%, transparent);
+  opacity: .62; filter: saturate(.75);
+  cursor: grab; touch-action: none;
+  transition: opacity .15s, filter .15s, box-shadow .15s, transform .12s;
+}
+.orb:hover, .orb.near {
+  opacity: 1; filter: saturate(1.05);
+  box-shadow: 0 0 22px color-mix(in srgb, var(--ai2) 48%, transparent);
+  transform: scale(1.05);
+}
+.orb:active { cursor: grabbing; }
+.orb.near {
+  box-shadow: 0 0 26px color-mix(in srgb, var(--ai2) 55%, transparent);
+  transform: scale(1.06);
+}
+.orb.busy {
+  opacity: 1; filter: saturate(1.2);
+  animation: spin 2.4s linear infinite;
+  box-shadow: 0 0 28px color-mix(in srgb, var(--ai3) 45%, transparent);
+}
+@keyframes spin { to { filter: hue-rotate(360deg) saturate(1.2); } }
+@media (prefers-reduced-motion: reduce) {
+  .orb.busy { animation: none; }
+}
+.wire {
+  position: absolute; inset: 0; z-index: 2; pointer-events: none;
+}
+.ghost {
+  position: absolute; z-index: 4; pointer-events: none;
+  padding: 8px 10px; border-radius: 4px; font: 12px/1.35 -apple-system, "PingFang SC", sans-serif;
+  background: var(--card); border: 1px dashed var(--line); color: var(--muted);
+  opacity: 0; transition: opacity .12s;
+}
+.ghost.show { opacity: 1; }
+.menu {
+  position: absolute; z-index: 6; display: none;
+  min-width: 160px; padding: 6px; border-radius: 10px;
+  background: var(--card); border: 1px solid var(--line);
+  box-shadow: 0 12px 28px rgba(0,0,0,.14);
+}
+.menu.show { display: block; }
+.menu button {
+  display: block; width: 100%; text-align: left; border: 0; background: transparent;
+  color: var(--ink); padding: 10px 12px; border-radius: 6px; cursor: pointer;
+  font: 500 12px/1.3 -apple-system, "PingFang SC", sans-serif; min-height: 40px;
+}
+.menu button:hover { background: color-mix(in srgb, var(--ai1) 12%, transparent); }
+.toast {
+  position: absolute; left: 50%; bottom: 36px; transform: translateX(-50%);
+  z-index: 7; background: var(--ink); color: var(--paper); font-size: 12px;
+  padding: 8px 14px; border-radius: 8px; opacity: 0; transition: opacity .2s;
+  pointer-events: none; max-width: 80%; text-align: center;
+}
+.toast.show { opacity: .92; }
+.legend {
+  margin-top: 18px; display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px;
+  max-width: 900px;
+}
+@media (max-width: 800px) { .legend { grid-template-columns: 1fr; } }
+.legend article {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px 14px; font-size: 13px;
+}
+.legend h3 { margin: 0 0 4px; font-size: 13px; }
+.legend p { margin: 0; color: var(--muted); }
+.foot { margin-top: 14px; font-size: 12px; color: var(--muted); max-width: 52em; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <nav class="nav">
+    <a href="ai-入口地图.html">入口地图</a>
+    <a href="ai-进行中.html">进行中</a>
+    <a href="ai-召唤球.html" aria-current="page">召唤球</a>
+    <a href="回填选择.html">回填</a>
+    <a href="参考页卡.html">参考页</a>
+  </nav>
+
+  <p class="eyebrow">AI UX · Plate 11 · 逻辑板 · 非工程</p>
+  <h1>拖线三落点</h1>
+  <p class="lead">从纸边把手拖出线：落到召唤球 → AI；落到空白 → 普通旁注；落到已有卡 → 只连边。球可单独拖到边距任意位置。</p>
+  <div class="reco">
+    <b>试玩：</b>悬停球/卡看披露 → 拖把手三落点 → 拖球换位 → <b>双击旁注卡</b>进入编辑。
+    球的玻璃质感仅为占位，正式应对齐 <code>ai-orb.mp4</code>。本页不接模型、不改 App 代码。
+  </div>
+  <p class="hint">拖线保留为空间手势；也可以点按提问。作者旁注有明确编辑按钮，双击是额外快捷方式。连续追问见<a href="一次写作.html">一次写作</a>。</p>
+  <button type="button" id="askDirect" style="min-height:44px;padding:8px 16px;margin-bottom:12px">就这段问…</button>
+
+  <div class="device">
+    <div class="screen" id="screen">
+      <svg class="wire" id="wireSvg" width="100%" height="100%"></svg>
+
+      <div class="orb" id="orb" title="召唤球 · 可拖" role="img" aria-label="召唤球"></div>
+
+      <div class="paper">
+        <h2>Traversable</h2>
+        <p class="here">常有人把 sequenceA 记成 traverse id。先怀疑，再决定要不要问机器。</p>
+        <p style="color:var(--muted);font-size:.92em">纸不接收 Glow。球只在边距。</p>
+      </div>
+
+      <div class="handle" id="handle" title="纸侧边把手"></div>
+
+      <div class="note" id="existCard">
+        <div class="k">作者旁注</div>
+        <div class="body" id="cardBody">我还想弄清楚：这个说法在什么条件下成立？</div>
+        <button type="button" id="editNote" style="min-height:44px;margin-top:8px">编辑我的旁注</button>
+        <div class="hint">也可双击编辑 · 拖动挪位置</div>
+      </div>
+
+      <div class="ghost" id="ghost">普通旁注</div>
+      <div class="menu" id="aiMenu" aria-label="AI 动作">
+        <button type="button" data-v="ask">就这段问</button>
+        <button type="button" data-v="refute">最强反驳</button>
+        <button type="button" data-v="lookup">查阅 / 参考页</button>
+        <button type="button" data-v="cancel">取消</button>
+      </div>
+
+      <div class="toast" id="toast" role="status"></div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <article>
+      <h3>→ 召唤球</h3>
+      <p>进 AI。先出小目录（或默认「就这段问」）。进行中球可狂转；落地后熄灭。</p>
+    </article>
+    <article>
+      <h3>→ 空白</h3>
+      <p>普通旁注：手写问题 / 碎片。不跑模型。误触撤销要轻。</p>
+    </article>
+    <article>
+      <h3>→ 已有卡</h3>
+      <p>只连边，不跑 AI。与既有「卡→卡」规则一致。</p>
+    </article>
+  </div>
+  <p class="foot">键盘等价（逻辑）：「新旁注」≠「问 AI」；旁注编辑另有快捷键【待定】。召唤球视觉正式稿跟 <code>ai-orb.mp4</code>。真写若常驻球仍分心 → 降级为「仅拖线过程中出现」。</p>
+</div>
+<script>
+(function () {
+  const screen = document.getElementById('screen');
+  const orb = document.getElementById('orb');
+  const handle = document.getElementById('handle');
+  const exist = document.getElementById('existCard');
+  const ghost = document.getElementById('ghost');
+  const menu = document.getElementById('aiMenu');
+  const toast = document.getElementById('toast');
+  const svg = document.getElementById('wireSvg');
+  let line = null;
+  let mode = null; // 'wire' | 'orb' | 'card'
+  let start = null;
+  let cardGrab = null;
+  let cardDown = null;
+  let toastTimer;
+  const cardBody = document.getElementById('cardBody');
+  const DRAG_THRESHOLD = 5;
+
+  function rect() { return screen.getBoundingClientRect(); }
+  function local(e) {
+    const r = rect();
+    const x = ('touches' in e && e.touches[0] ? e.touches[0].clientX : e.clientX) - r.left;
+    const y = ('touches' in e && e.touches[0] ? e.touches[0].clientY : e.clientY) - r.top;
+    return { x, y };
+  }
+  function flash(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => toast.classList.remove('show'), 1600);
+  }
+  function orbCenter() {
+    return {
+      x: orb.offsetLeft + orb.offsetWidth / 2,
+      y: orb.offsetTop + orb.offsetHeight / 2,
+      r: Math.max(orb.offsetWidth, 52) * 0.65
+    };
+  }
+  function hitOrb(p) {
+    const o = orbCenter();
+    const dx = p.x - o.x, dy = p.y - o.y;
+    return Math.hypot(dx, dy) <= o.r;
+  }
+  function hitCard(p) {
+    const r = exist.getBoundingClientRect();
+    const s = rect();
+    return p.x >= r.left - s.left && p.x <= r.right - s.left &&
+           p.y >= r.top - s.top && p.y <= r.bottom - s.top;
+  }
+  function handleOrigin() {
+    return {
+      x: handle.offsetLeft + handle.offsetWidth / 2,
+      y: handle.offsetTop + handle.offsetHeight / 2
+    };
+  }
+  function drawWire(a, b) {
+    if (!line) {
+      line = document.createElementNS('http://www.w3.org/2000/svg', 'path');
+      line.setAttribute('fill', 'none');
+      line.setAttribute('stroke', 'rgba(60,60,60,.55)');
+      line.setAttribute('stroke-width', '1.5');
+      line.setAttribute('stroke-linecap', 'round');
+      svg.appendChild(line);
+    }
+    const mx = (a.x + b.x) / 2;
+    line.setAttribute('d', `M ${a.x} ${a.y} C ${mx} ${a.y}, ${mx} ${b.y}, ${b.x} ${b.y}`);
+  }
+  function clearWire() {
+    if (line) { line.remove(); line = null; }
+    orb.classList.remove('near');
+    exist.classList.remove('target');
+    ghost.classList.remove('show');
+  }
+
+  function onMove(e) {
+    if (!mode && !cardDown) return;
+    e.preventDefault();
+    const p = local(e);
+    if (mode === 'orb') {
+      orb.style.left = Math.max(8, Math.min(p.x - 26, screen.clientWidth - 60)) + 'px';
+      orb.style.top = Math.max(8, Math.min(p.y - 26, screen.clientHeight - 60)) + 'px';
+      return;
+    }
+    if (mode === 'card' || cardDown) {
+      if (cardDown && !cardGrab) {
+        const dx = p.x - cardDown.x, dy = p.y - cardDown.y;
+        if (Math.hypot(dx, dy) >= DRAG_THRESHOLD) {
+          cardGrab = { ox: cardDown.ox, oy: cardDown.oy };
+          mode = 'card';
+          if (exist.classList.contains('editing')) endEdit(false);
+        }
+      }
+      if (cardGrab) {
+        exist.style.left = 'auto';
+        exist.style.right = 'auto';
+        exist.style.left = Math.max(8, Math.min(p.x - cardGrab.ox, screen.clientWidth - exist.offsetWidth - 8)) + 'px';
+        exist.style.top = Math.max(8, Math.min(p.y - cardGrab.oy, screen.clientHeight - exist.offsetHeight - 8)) + 'px';
+      }
+      return;
+    }
+    const a = handleOrigin();
+    drawWire(a, p);
+    const onOrb = hitOrb(p);
+    const onCard = hitCard(p);
+    orb.classList.toggle('near', onOrb);
+    exist.classList.toggle('target', onCard && !onOrb);
+    if (!onOrb && !onCard) {
+      ghost.style.left = p.x + 12 + 'px';
+      ghost.style.top = p.y + 12 + 'px';
+      ghost.classList.add('show');
+    } else {
+      ghost.classList.remove('show');
+    }
+  }
+
+  function onUp(e) {
+    if (!mode && !cardDown) return;
+    const p = local(e.changedTouches ? e.changedTouches[0] : e);
+    if (mode === 'orb' || mode === 'card' || cardDown) {
+      mode = null;
+      cardGrab = null;
+      cardDown = null;
+      return;
+    }
+    mode = null;
+    cardGrab = null;
+    cardDown = null;
+    clearWire();
+    menu.classList.remove('show');
+    if (hitOrb(p)) {
+      const o = orbCenter();
+      menu.style.left = o.x + 28 + 'px';
+      menu.style.top = Math.max(12, o.y - 40) + 'px';
+      menu.classList.add('show');
+      flash('落在召唤球 · 选择 AI 动作（尚未请求）');
+      return;
+    }
+    if (hitCard(p)) {
+      flash('落在已有卡 · 只连边 · 不跑 AI');
+      return;
+    }
+    flash('落在空白 · 普通旁注 · 不跑模型');
+  }
+
+  function bindDrag(el, kind) {
+    const startDrag = (e) => {
+      mode = kind;
+      menu.classList.remove('show');
+      start = local(e);
+      if (kind === 'wire') {
+        drawWire(handleOrigin(), start);
+      }
+      e.preventDefault();
+    };
+    el.addEventListener('pointerdown', startDrag);
+  }
+
+  bindDrag(handle, 'wire');
+  bindDrag(orb, 'orb');
+  document.getElementById('askDirect').onclick = () => {
+    const o = orbCenter();
+    menu.style.left = Math.min(o.x + 28, screen.clientWidth - 180) + 'px';
+    menu.style.top = Math.max(12, o.y - 40) + 'px';
+    menu.classList.add('show');
+    menu.querySelector('button').focus();
+    flash('选择这次动作 · 尚未请求');
+  };
+  function endEdit(save) {
+    exist.classList.remove('editing');
+    cardBody.contentEditable = 'false';
+    if (save) flash('已退出编辑（示意）');
+  }
+  function startEdit() {
+    menu.classList.remove('show');
+    exist.classList.add('editing');
+    cardBody.contentEditable = 'true';
+    cardBody.focus();
+    const range = document.createRange();
+    range.selectNodeContents(cardBody);
+    range.collapse(false);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    flash('编辑旁注 · 点卡外或 Esc 结束');
+  }
+
+  exist.addEventListener('pointerdown', (e) => {
+    if (e.target.closest('button')) return;
+    if (mode === 'wire' || exist.classList.contains('editing')) return;
+    const p = local(e);
+    menu.classList.remove('show');
+    cardDown = { x: p.x, y: p.y, ox: p.x - exist.offsetLeft, oy: p.y - exist.offsetTop };
+    e.preventDefault();
+    e.stopPropagation();
+  });
+  exist.addEventListener('dblclick', (e) => {
+    if (e.target.closest('button')) return;
+    e.preventDefault();
+    e.stopPropagation();
+    cardDown = null;
+    cardGrab = null;
+    mode = null;
+    startEdit();
+  });
+  document.getElementById('editNote').onclick = () => {
+    cardDown = null; cardGrab = null; mode = null;
+    startEdit();
+  };
+  cardBody.addEventListener('keydown', (e) => {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      endEdit(true);
+    }
+  });
+  screen.addEventListener('pointerdown', (e) => {
+    if (exist.classList.contains('editing') && !exist.contains(e.target)) endEdit(true);
+  });
+
+  window.addEventListener('pointermove', onMove, { passive: false });
+  window.addEventListener('pointerup', onUp);
+  window.addEventListener('pointercancel', () => {
+    mode = null; cardGrab = null; cardDown = null; clearWire();
+  });
+
+  menu.addEventListener('click', (e) => {
+    const btn = e.target.closest('button[data-v]');
+    if (!btn) return;
+    menu.classList.remove('show');
+    if (btn.dataset.v === 'cancel') {
+      flash('已取消');
+      return;
+    }
+    orb.classList.add('busy');
+    flash('进行中示意 · ' + btn.textContent.trim() + '（板面不接模型）');
+    setTimeout(() => orb.classList.remove('busy'), 1800);
+  });
+})();
+</script>
+</body>
+</html>

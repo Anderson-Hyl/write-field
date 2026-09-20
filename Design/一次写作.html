@@ -1,377 +1,68 @@
 <!doctype html>
-<html lang="zh-CN">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>写作现场 · 一次写作</title>
-<style>
-:root {
-  --bg: #E8E4DC; --ink: #1A1A1A; --muted: #5C574E; --line: #D2CBBE;
-  --paper: #F7F4EE; --field: #EFEBE3; --surface: #FBFAF7;
-  --accent: #2C6BED; --wire: #3A3A3A; --dim: #8A8478;
-  --src: #3D7A45; --src-bg: #D8EDD4; --ask: #8B3D7A; --ask-bg: #F3D6EA;
-}
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) {
-    --bg: #12110F; --ink: #F4F1EA; --muted: #A39B8E; --line: #2E2B26;
-    --paper: #1C1B18; --field: #161513; --surface: #22211E;
-    --accent: #6EA0F0; --wire: #C8C2B6; --dim: #7A7468;
-    --src: #8FCB96; --src-bg: #243328; --ask: #E4A7D4; --ask-bg: #332430;
-  }
-}
-* { box-sizing: border-box; }
-body {
-  margin: 0; background: var(--bg); color: var(--ink);
-  font: 15px/1.7 -apple-system, BlinkMacSystemFont, "PingFang SC", "Hiragino Sans GB", system-ui, sans-serif;
-  -webkit-font-smoothing: antialiased;
-}
-.wrap { max-width: 1080px; margin: 0 auto; padding: 36px 24px 96px; }
-.nav {
-  display: flex; gap: 16px; margin-bottom: 24px;
-  font: 500 12px/1 ui-monospace, Menlo, monospace;
-}
-.nav a { color: var(--muted); text-decoration: none; }
-.nav a[aria-current="page"] { color: var(--ink); }
-.eyebrow {
-  font: 500 11px/1 ui-monospace, Menlo, monospace;
-  letter-spacing: .12em; text-transform: uppercase; color: var(--muted);
-}
-h1 { font-size: 30px; line-height: 1.2; margin: 10px 0 12px; font-weight: 600; text-wrap: balance; }
-h2.sec { font-size: 18px; font-weight: 600; margin: 52px 0 12px; padding-top: 22px; border-top: 1px solid var(--line); }
-.lead { font-size: 17px; line-height: 1.65; color: var(--muted); max-width: 44em; }
-.reco {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
-  padding: 16px 20px; margin: 18px 0 20px; max-width: 48em;
-}
-.reco b { color: var(--accent); }
-.key {
-  display: grid; grid-template-columns: 1fr 1fr; gap: 12px;
-  margin: 0 0 36px; max-width: 48em;
-}
-@media (max-width: 640px) { .key { grid-template-columns: 1fr; } }
-.key > div {
-  background: var(--surface); border: 1px solid var(--line); border-radius: 14px;
-  padding: 14px 16px;
-}
-.key h3 { font-size: 13px; margin: 0 0 6px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 600; }
-.key p { margin: 0; font-size: 14px; }
-.beat { margin: 0 0 40px; }
-.beat header { display: flex; gap: 12px; align-items: baseline; margin-bottom: 8px; }
-.n { font: 500 11px/1 ui-monospace, Menlo, monospace; color: var(--accent); letter-spacing: .08em; }
-.beat h2 { font-size: 16px; font-weight: 600; margin: 0; }
-.beat > p { margin: 0 0 10px; color: var(--muted); font-size: 14px; max-width: 46em; }
-.stage {
-  position: relative; height: 420px; border-radius: 18px;
-  background: var(--field); overflow: hidden;
-  box-shadow: inset 0 0 0 1px var(--line);
-}
-.stage.pad { height: 520px; width: min(100%, 420px); }
-.paper {
-  position: absolute; left: 50%; top: 22px; bottom: 22px; width: min(42%, 340px);
-  transform: translateX(-50%);
-  background: var(--paper); border-radius: 22px;
-  box-shadow: 0 18px 40px color-mix(in srgb, var(--ink) 10%, transparent);
-  padding: 28px 26px 24px;
-  font-size: 15px; line-height: 1.6;
-}
-.paper.focus { width: min(70%, 520px); }
-.paper h3 { font-size: 22px; font-weight: 600; margin: 0 0 16px; letter-spacing: -.02em; }
-.paper .p { margin: 0 0 10px; color: var(--dim); }
-.paper .p.here {
-  color: var(--ink);
-  background: color-mix(in srgb, var(--accent) 10%, transparent);
-  margin-left: -8px; margin-right: -8px; padding: 6px 8px; border-radius: 8px;
-}
-.port {
-  position: absolute; width: 16px; height: 16px; border-radius: 50%;
-  background: var(--paper); border: 2px solid var(--ink);
-  box-shadow: 0 0 0 4px color-mix(in srgb, var(--paper) 80%, transparent);
-}
-.port.l { left: -8px; }
-.port.r { right: -8px; }
-.card {
-  position: absolute; width: 168px; min-height: 88px; border-radius: 18px;
-  padding: 14px 14px 16px; font-size: 13px; line-height: 1.4;
-  box-shadow: 0 10px 24px color-mix(in srgb, var(--ink) 12%, transparent);
-}
-.card.src { background: var(--src-bg); color: var(--ink); }
-.card.ask { background: var(--ask-bg); color: var(--ink); }
-.card .k { font: 600 10px/1 ui-monospace, Menlo, monospace; letter-spacing: .08em; text-transform: uppercase; margin-bottom: 6px; opacity: .7; }
-.card .t { font-weight: 650; font-size: 15px; }
-.card .q { margin-top: 4px; opacity: .75; }
-.card.flat { opacity: .55; box-shadow: none; }
-.wires { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; }
-.joint {
-  font-size: 13px; color: var(--ink); max-width: 44em; margin-top: 10px;
-  padding-left: 12px; border-left: 2px solid var(--accent);
-}
-.trio { display: grid; grid-template-columns: 1.2fr .7fr; gap: 16px; align-items: start; }
-@media (max-width: 800px) { .trio { grid-template-columns: 1fr; } }
-.wrong {
-  position: relative; height: 220px; border-radius: 14px; overflow: hidden;
-  background: var(--surface); box-shadow: inset 0 0 0 1px var(--line);
-}
-.wrong .col {
-  position: absolute; top: 12px; bottom: 12px; left: 12px; width: 42%;
-  background: var(--paper); border-right: 1px solid var(--line); padding: 12px; font-size: 11px; color: var(--dim);
-}
-.wrong .side {
-  position: absolute; top: 28px; left: 50%; width: 140px;
-  background: var(--surface); border: 1px solid var(--line); border-radius: 8px; padding: 8px; font-size: 11px;
-}
-</style>
-</head>
-<body>
-<div class="wrap">
-  <nav class="nav">
-    <a href="一次写作.html" aria-current="page">一次写作</a>
-    <a href="iPad横-写作现场.html">iPad 横 · S1</a>
-    <a href="旁注色.html">旁注色</a>
-    <a href="ai-进行中.html">AI 进行中</a>
-    <a href="锚点 rest-open.html">锚点</a>
-    <a href="派生呈现.html">派生</a>
-  </nav>
-  <div class="eyebrow">Write-field · 整场 · 2026-09-17 · 对照手绘草稿</div>
-  <h1>打开像 Pages：中间一张白纸</h1>
-  <p class="lead">主体写在纸上，<b>往下滚</b>。AI、草稿、资料、求证挂在左右。横向留给周围，不要用来翻页。不是左栏编辑器、右栏检查器，也不是无限画布。</p>
-  <div class="reco"><b>iPad 要快：</b>侧边端口够手指。正在写的这段，周围已经在。没有 hover。没有第二台相机。</div>
-  <div class="key">
-    <div>
-      <h3>纸上 · 主体</h3>
-      <p>稿。线性 markdown。footnote。正在打的字。<b>纵向滚这篇</b>，不横向翻页。</p>
-    </div>
-    <div>
-      <h3>周围 · 临时</h3>
-      <p>AI、草稿、资料、求证。进纸必须手搬。隔夜还在——临时不是扔掉。</p>
-    </div>
-  </div>
-
-  <article class="beat">
-    <header><span class="n">0</span><h2>核心现场</h2></header>
-    <p>打开之后就是这样。中间一张纸，主体在上面；临时内容挂在两侧，接到这段。</p>
-    <div class="stage">
-      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M330 210 C 250 210, 230 118, 168 118" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-        <path d="M750 210 C 830 210, 850 200, 912 200" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-      </svg>
-      <div class="card src" style="left:24px;top:72px">
-        <div class="k">周围 · 资料</div>
-        <div class="t">一句依据</div>
-        <div class="q">还没进正文。</div>
-      </div>
-      <div class="paper">
-        <h3>Let us write something</h3>
-        <div class="p">主体写在这张纸上。</div>
-        <div class="p here">AI 的产物先停在周围。
-          <span class="port l" style="top:118px"></span>
-          <span class="port r" style="top:118px"></span>
-        </div>
-      </div>
-      <div class="card ask" style="right:24px;top:156px">
-        <div class="k">周围 · AI</div>
-        <div class="t">一个问题</div>
-        <div class="q">这段站得住吗？</div>
-      </div>
-    </div>
-  </article>
-
-  <article class="beat">
-    <header><span class="n">1</span><h2>开题</h2></header>
-    <p>一张在正中的白纸。没有端口，没有卡。开始打字。</p>
-    <div class="stage">
-      <div class="paper">
-        <h3>Let us write something</h3>
-        <div class="p here">█</div>
-      </div>
-    </div>
-  </article>
-
-  <article class="beat">
-    <header><span class="n">2</span><h2>写到起疑</h2></header>
-    <p>这段的侧边就是把手。拖出去：问，或把一句资料丢进来。不在字缝里插点。</p>
-    <div class="stage">
-      <div class="paper">
-        <h3>Let us write something</h3>
-        <div class="p">写作的价值在过程，不在成品。</div>
-        <div class="p here">上下文驻留在文章周围，而不是空间本身。<span class="port r" style="top:118px"></span></div>
-      </div>
-    </div>
-  </article>
-
-  <article class="beat">
-    <header><span class="n">3</span><h2>停在旁边</h2></header>
-    <p>卡出现在纸的左和右，线接到这段的侧边。正文还在打。草稿：依据偏左，求证偏右——未锁。</p>
-    <div class="stage">
-      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M330 210 C 250 210, 230 118, 168 118" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-        <path d="M750 210 C 830 210, 850 200, 912 200" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-      </svg>
-      <div class="card src" style="left:24px;top:72px">
-        <div class="k">依据</div>
-        <div class="t">Feature reason</div>
-        <div class="q">输出不是终点。</div>
-      </div>
-      <div class="paper">
-        <h3>Let us write something</h3>
-        <div class="p">写作的价值在过程，不在成品。</div>
-        <div class="p here">上下文驻留在文章周围，而不是空间本身。
-          <span class="port l" style="top:118px"></span>
-          <span class="port r" style="top:118px"></span>
-        </div>
-      </div>
-      <div class="card ask" style="right:24px;top:156px">
-        <div class="k">求证</div>
-        <div class="t">Confirm</div>
-        <div class="q">这段站得住吗？</div>
-      </div>
-    </div>
-  </article>
-
-  <article class="beat">
-    <header><span class="n">4</span><h2>对资料再想</h2></header>
-    <p>从左边那张再问。新卡仍挂在这段上，仍在两侧，不另开一张图。</p>
-    <div class="stage">
-      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M330 210 C 250 210, 230 90, 168 90" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-        <path d="M750 210 C 830 210, 850 128, 912 128" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-        <path d="M750 210 C 820 210, 840 280, 912 280" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-      </svg>
-      <div class="card src" style="left:24px;top:48px">
-        <div class="k">依据</div>
-        <div class="t">Feature reason</div>
-        <div class="q">从「Flowise…」</div>
-      </div>
-      <div class="paper">
-        <h3>Let us write something</h3>
-        <div class="p">写作的价值在过程，不在成品。</div>
-        <div class="p here">上下文驻留在文章周围，而不是空间本身。
-          <span class="port l" style="top:118px"></span>
-          <span class="port r" style="top:118px"></span>
-        </div>
-      </div>
-      <div class="card ask" style="right:24px;top:88px">
-        <div class="k">问题</div>
-        <div class="t">输出是不是终点？</div>
-      </div>
-      <div class="card ask" style="right:24px;top:236px">
-        <div class="k">求证</div>
-        <div class="t">Confirm</div>
-      </div>
-    </div>
-    <p class="joint">卡是手能点到的块，不是 6px 点点开之后才出现的检查器。</p>
-  </article>
-
-  <article class="beat">
-    <header><span class="n">5</span><h2>搬回正文</h2></header>
-    <p>写成自己的句子、拖成 footnote，或把图表插入纸上。都是作者点的。卡变扁。循环在这里才闭合。</p>
-    <div class="stage">
-      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M330 210 C 250 210, 230 160, 168 160" fill="none" stroke="var(--wire)" stroke-width="1.75" opacity=".4"/>
-      </svg>
-      <div class="card src flat" style="left:24px;top:120px">
-        <div class="k">依据 · 已用</div>
-        <div class="t">Feature reason</div>
-        <div class="q">进了 footnote。</div>
-      </div>
-      <div class="paper">
-        <h3>Let us write something</h3>
-        <div class="p">写作的价值在过程，不在成品。</div>
-        <div class="p here">上下文驻留在文章周围，而不是空间本身。[1]
-          <span class="port l" style="top:118px"></span>
-        </div>
-      </div>
-    </div>
-  </article>
-
-  <article class="beat">
-    <header><span class="n">6</span><h2>往下写</h2></header>
-    <p>滚这篇。刚才那段留下一个侧边端口。新段是空的。不是换房间，也不是缩远。</p>
-    <div class="stage">
-      <div class="paper">
-        <h3>Let us write something</h3>
-        <div class="p">上下文驻留在文章周围……<span class="port r" style="top:52px"></span></div>
-        <div class="p">空间布局本身不是产物。</div>
-        <div class="p here">因此判断成立，要看有没有少切一次。█</div>
-      </div>
-    </div>
-  </article>
-
-  <article class="beat">
-    <header><span class="n">7</span><h2>只想打字</h2></header>
-    <p>专注：只剩纸。端口还在。回来时，刚才两侧的卡还在。</p>
-    <div class="stage">
-      <div class="paper focus">
-        <h3>Let us write something</h3>
-        <div class="p">因此判断成立，要看有没有少切一次。</div>
-        <div class="p here">手写让我们重新审视自己写过的东西。█</div>
-      </div>
-    </div>
-  </article>
-
-  <article class="beat">
-    <header><span class="n">8</span><h2>隔夜</h2></header>
-    <p>还是这张纸。光标、当时在两侧的卡、未回答的问题还在。</p>
-    <div class="stage">
-      <svg class="wires" viewBox="0 0 1080 420" preserveAspectRatio="none" aria-hidden="true">
-        <path d="M750 180 C 830 180, 850 170, 912 170" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-      </svg>
-      <div class="paper">
-        <h3>Let us write something</h3>
-        <div class="p">上下文驻留在文章周围……</div>
-        <div class="p here">因此判断成立，要看有没有少切一次。█
-          <span class="port r" style="top:118px"></span>
-        </div>
-      </div>
-      <div class="card ask" style="right:24px;top:128px">
-        <div class="k">待解决</div>
-        <div class="t">Confirm</div>
-        <div class="q">这段站得住吗？</div>
-      </div>
-    </div>
-  </article>
-
-  <h2 class="sec">iPad 横是主现场</h2>
-  <p class="lead">竖屏侧边会挤。先把横屏画对：纸在正中，两只手都有东西可点。竖屏未锁。</p>
-  <div class="trio">
-    <div>
-      <div class="stage" style="height:360px">
-        <svg class="wires" viewBox="0 0 1080 360" preserveAspectRatio="none" aria-hidden="true">
-          <path d="M330 180 C 250 180, 230 100, 168 100" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-          <path d="M750 180 C 830 180, 850 170, 912 170" fill="none" stroke="var(--wire)" stroke-width="1.75"/>
-        </svg>
-        <div class="card src" style="left:20px;top:56px"><div class="k">依据</div><div class="t">Feature reason</div></div>
-        <div class="paper" style="top:16px;bottom:16px">
-          <h3>Let us write something</h3>
-          <div class="p here">驻留在文章周围。
-            <span class="port l" style="top:86px"></span>
-            <span class="port r" style="top:86px"></span>
-          </div>
-        </div>
-        <div class="card ask" style="right:20px;top:128px"><div class="k">求证</div><div class="t">Confirm</div></div>
-      </div>
-      <p class="joint">对照手绘：纸是主体，左右是对象，线接到纸边。格子和八角选框不要进产品。</p>
-    </div>
-    <div>
-      <div class="stage pad">
-        <div class="paper" style="width:78%;top:16px;bottom:120px">
-          <h3>Let us write something</h3>
-          <div class="p here">驻留在文章周围。</div>
-        </div>
-        <div class="card ask" style="left:16px;right:16px;width:auto;bottom:16px;top:auto">
-          <div class="k">求证 · 这段</div>
-          <div class="t">Confirm</div>
-        </div>
-      </div>
-      <p class="beat" style="margin:8px 0 0;color:var(--muted);font-size:13px">竖屏草稿：卡暂时贴在纸下缘，仍属于这段，不是工具箱。</p>
-    </div>
-  </div>
-
-  <h2 class="sec">不是这个</h2>
-  <p>左栏编辑器、右栏检查器。那是 IDE，不是 Pages 式的一张纸。周围必须认段落，不能收成一列工具。</p>
-  <div class="wrong">
-    <div class="col">Let us write something<br><br>编辑器分栏。<br>卡是检查器。</div>
-    <div class="side"><b>问题</b><br>点开才看见。</div>
-  </div>
-</div>
-</body>
-</html>
+<html lang="zh-CN"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>写作现场 · 从讨论到自己的文字</title><link rel="stylesheet" href="writing-prototype.css"></head>
+<body><main class="wrap">
+<p class="toolbar"><a class="button" href="写作现场-设计提案.html">打开新版设计 · 段旁讨论 →</a><span class="small">这一页保留流程演练；新版集中体验讨论、资料与采用。</span></p>
+<nav class="nav"><a href="一次写作.html" aria-current="page">一次写作</a><a href="iPad横-写作现场.html">段旁现场</a><a href="ai-召唤球.html">拖线入口</a><a href="回填选择.html">采用与引用</a><a href="ai-上下文与姿态.html">本次阅读范围</a><a href="参考页卡.html">参考页</a><a href="ai-入口地图.html">入口地图</a></nav>
+<div class="eyebrow">WriteField · 2026.09.19 · 交互提案</div><h1>让文字跟上自己的理解</h1>
+<p class="lead">借助 AI 找到切口、追问和比较，在纸上写下自己的表达。讨论可以先于第一段文字，取舍始终留给作者。</p>
+<p class="demo-note">待讨论原型 · 两个场景均使用固定演练材料，未连接模型。话题级讨论、连续追问与取舍便笺尚未成为工程定案。输入只保留在本页内存，刷新会清空。</p>
+<div class="toolbar"><span class="small">演练</span><button data-scenario="haskell" aria-pressed="true">Traversable 文章</button><button data-scenario="mosaic" aria-pressed="false">Mosaic PRD</button><span class="spacer"></span><button id="focus" aria-pressed="false">只看稿</button><button id="leave">暂时离开</button></div>
+<div class="desk" id="desk"><div class="scene">
+<aside class="margin" aria-label="依据与自己的取舍">
+<section class="card"><div class="role source">↗ 资料 · 演练材料</div><h3 id="sourceTitle"></h3><p id="sourceText"></p><a id="sourceLink" class="small" href="#">打开原始依据</a><details><summary>为什么留在这里</summary><p id="sourceReason"></p></details></section>
+<section class="card"><div class="role open">○ 我的理解与取舍</div><p class="small">想清楚一点，就可以留一句。也可以暂时不写。</p><label for="decision">我目前怎么想</label><textarea id="decision" placeholder="例如：从具体问题开始，因为……"></textarea><button id="saveDecision">留下这句</button><p id="savedDecision" class="small">还没有留下取舍。</p><details id="decisionHistory" hidden><summary>以前的取舍</summary><div id="pastDecisions"></div></details></section>
+</aside>
+<article class="paper"><div class="paper-label">这篇稿 · MARKDOWN</div><h2 id="title"></h2><label for="body" class="small">正文</label><textarea id="body" class="manuscript" placeholder="可以直接写，也可以先在旁边一起想想。" spellcheck="false"></textarea><div class="actions"><button id="undo" disabled>撤销最近一次插入</button><button id="review">请 AI 读我的稿</button></div><footer>稿面始终可以编辑。这里只演示交互，尚未接入编辑器内核。</footer></article>
+<aside class="margin" aria-label="关于这篇的讨论">
+<section class="card"><div class="role">✧ 关于这篇 · 讨论</div><p class="small">还没成段也可以开始。沿着同一个问题继续想。</p><div class="conversation" id="conversation" aria-live="polite"></div>
+<div class="actions" id="prompts"></div><form id="askForm"><label for="question">写下问题，或用上面的演练问法</label><textarea id="question" placeholder="我会用它，但不知道怎么讲清楚……" required></textarea><div class="actions"><button type="submit">继续讨论</button></div></form><p class="small">自由输入会被保留；只有标出的演练问法有预设回答。</p></section>
+<section class="card" id="candidate" hidden><div class="role">✧ 留在旁边的候选</div><pre id="candidateText"></pre><div class="actions"><button id="insert">预览插入…</button><button id="putAside">暂时不用</button></div><p class="small">没有引用来源的候选不提供 footnote。读过它、改变了想法，也可以不插入。</p></section>
+</aside>
+</div></div><p class="status" id="status" role="status"></p>
+<details class="design-notes"><summary>本页建议保留与改变的规则</summary><ol><li>保留中央稿面、两侧上下文与作者插入。关于整篇的对象不画成假段落连线。</li><li>增加空稿开题、同一卡内追问。示例回复不评价作者是否“通过理解测试”。</li><li>作者自己留下取舍；AI 回答不会被自动写成作者的决定。</li><li>插入前展示内容与位置；撤销还原插入前的稿。插入后若继续改字，此按钮停止撤销，避免覆盖新文字。</li><li>离开便笺可空，返回恢复本页现场。这里不演示跨启动持久化。</li><li>窄窗口顺排卡片仅为浏览适配，iPad 竖屏产品形态仍待讨论。</li></ol></details>
+<dialog id="insertDialog" aria-labelledby="insertTitle"><h2 id="insertTitle">把这块放进稿里</h2><p id="insertLocation" class="small"></p><pre id="insertPreview"></pre><p class="small">确认后插入。已有选区保留，不替换。</p><div class="actions"><button id="cancelInsert">再想想</button><button id="confirmInsert">插入到这里</button></div></dialog>
+<dialog id="reviewDialog" aria-labelledby="reviewTitle"><h2 id="reviewTitle">请 AI 读我的稿</h2><p>本次阅读：这篇全文 + 已留下的取舍。请从读者角度找解释缺口，指出依据，给出建议。</p><pre id="reviewSnapshot"></pre><p class="small">本页不接模型。确认后只演示请求回执，不伪造针对你正文的审阅结果。</p><div class="actions"><button id="cancelReview">取消</button><button id="confirmReview">确认这次全文阅读</button></div></dialog>
+<dialog id="leaveDialog" aria-labelledby="leaveTitle"><h2 id="leaveTitle">给回来的自己留一句</h2><label for="nextStep">接下来想做什么（可空）</label><textarea id="nextStep" placeholder="我已经想清楚……回来先看……"></textarea><div class="actions"><button id="cancelLeave">继续写</button><button id="confirmLeave">留在这里，暂时离开</button></div></dialog>
+<dialog id="returnDialog" aria-labelledby="returnTitle"><h2 id="returnTitle">回到刚才的现场</h2><p id="returnNote"></p><p class="small">演示暂停结束后，正文、讨论与取舍仍在本页；未调用 AI。</p><div class="actions"><button id="return">接着写</button></div></dialog>
+</main><script>
+'use strict';
+const $ = id => document.getElementById(id);
+const scenarios = {
+ haskell: {title:'从 fmap 到 traverse',sourceTitle:'Data.Traversable',source:'traverse :: (Traversable t, Applicative f) => (a -> f b) -> t a -> f (t b)',url:'https://hackage.haskell.org/package/base-4.15.0.0/docs/Data-Traversable.html',reason:'先对照定义，再决定怎样讲。固定材料不代表页面正在联网检索。',prompts:[
+ ['找一个切口','可以从“逐项解析结果”和“整批解析结果”的差异开始，也可以从类型中的 t 与 f 开始。前者能先让读者遇到一个需求。你最想讲清楚哪一个？'],
+ ['给一个小例子','map readMaybe 会保留每一项的解析结果；traverse readMaybe 则用 Maybe 组合它们。这里一项失败会得到 Nothing。这是这个 Maybe 例子的行为。'],
+ ['能收集所有错误吗？','这个 Maybe 例子不能收集所有错误。组合方式取决于选用的 Applicative。写作时可以把这句话收窄到当前例子，再决定要不要展开其它实例。']
+ ],candidate:'map (readMaybe :: String -> Maybe Int) ["12", "oops", "7"]\n-- [Just 12,Nothing,Just 7]\n\ntraverse (readMaybe :: String -> Maybe Int) ["12", "oops", "7"]\n-- Nothing'},
+ mosaic: {title:'Mosaic · 下次从这里继续',sourceTitle:'现有能力与边界',source:'当前本地资料：已有 Note、Room 恢复与聚焦 tile。Attention / MRU 是运行时状态，不能跨重启冒充当前进程状态。',url:'../research/simulations/mosaic-resume-note-prd.md',reason:'区分已有能力、需求假设与新提案。本地 checkout 尚未与发布版本逐项核对。',prompts:[
+ ['先质疑这个需求','普通 Note 也能记下下一步。新功能要回答的是：回来时为什么找不到那张 Note？若已有摆放方式足够方便，额外标记可能只是维护负担。'],
+ ['比较几种方案','普通 Note 最轻；给现有 Note 指定“下次继续”能补上发现入口；独立 Checkpoint 容易让人期待快照与回滚。你愿意承担哪一种承诺？'],
+ ['检查容易含糊的边界','“恢复现场”可能被理解为跳到对象、恢复布局，甚至重启进程。还需要决定目标被删、Note 移出 Room、仅仅看过便笺时各发生什么。']
+ ],candidate:'候选边界：点击“继续”只聚焦关联对象。目标已删除时保留便笺，提示重新指定；不猜测同名对象，不自动执行命令。'}
+};
+const fresh = () => ({body:'',decision:'',saved:'',history:[],turns:[],question:'',candidate:false,next:'',caret:0,undo:null});
+const states = {haskell:fresh(),mosaic:fresh()};let current='haskell',pending=null,composition=false;
+function message(text){$('status').textContent=text;}
+function capture(){const s=states[current];s.body=$('body').value;s.decision=$('decision').value;s.question=$('question').value;s.caret=$('body').selectionStart;}
+function addTurn(speaker,text){states[current].turns.push({speaker,text});renderTurns();}
+function renderTurns(){const root=$('conversation');root.replaceChildren();for(const t of states[current].turns){const row=document.createElement('div');row.className='turn';const who=document.createElement('div');who.className='speaker';who.textContent=t.speaker;const p=document.createElement('p');p.textContent=t.text;row.append(who,p);root.append(row);}if(!root.children.length){const p=document.createElement('p');p.className='empty';p.textContent='你想先弄明白什么？';root.append(p);}root.scrollTop=root.scrollHeight;}
+function render(){const d=scenarios[current],s=states[current];$('title').textContent=d.title;$('sourceTitle').textContent=d.sourceTitle;$('sourceText').textContent=d.source;$('sourceLink').href=d.url;$('sourceReason').textContent=d.reason;$('body').value=s.body;$('body').setSelectionRange(s.caret,s.caret);$('decision').value=s.decision;$('question').value=s.question;$('savedDecision').textContent=s.saved?'已留下：'+s.saved:'还没有留下取舍。';$('decisionHistory').hidden=!s.history.length;$('pastDecisions').replaceChildren();s.history.forEach(t=>{const p=document.createElement('p');p.textContent=t;$('pastDecisions').append(p);});$('candidate').hidden=!s.candidate;$('candidateText').textContent=d.candidate;$('undo').disabled=!s.undo;$('prompts').replaceChildren();d.prompts.forEach(([question])=>{const b=document.createElement('button');b.type='button';b.textContent=question;b.onclick=()=>{$('question').value=question;$('question').focus();};$('prompts').append(b);});document.querySelectorAll('[data-scenario]').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.scenario===current)));renderTurns();}
+document.querySelectorAll('[data-scenario]').forEach(b=>b.onclick=()=>{if(composition)return;capture();current=b.dataset.scenario;render();message('已切换演练；两篇的稿、讨论和取舍分别保留在本页。');});
+$('body').addEventListener('compositionstart',()=>composition=true);$('body').addEventListener('compositionend',()=>{composition=false;capture();states[current].undo=null;$('undo').disabled=true;});
+$('body').oninput=()=>{if(composition)return;capture();states[current].undo=null;$('undo').disabled=true;};
+$('askForm').onsubmit=e=>{e.preventDefault();const question=$('question').value.trim();if(!question)return;addTurn('你的问题',question);const answer=scenarios[current].prompts.find(p=>p[0]===question);addTurn('演示助手 · 固定材料',answer?answer[1]:'问题已保留。此离线板没有模型，不会假装理解这条自由提问；可以使用上方演练问法查看连续讨论。');$('question').value='';states[current].question='';if(answer && question!==scenarios[current].prompts[0][0]){states[current].candidate=true;$('candidate').hidden=false;}message('讨论已留在旁边，正文保持原样。');};
+$('saveDecision').onclick=()=>{const s=states[current],text=$('decision').value.trim();if(s.saved&&s.saved!==text)s.history.push(s.saved);s.saved=text;s.decision=text;capture();render();message(text?'已留下你的取舍。':'已清空当前取舍；以前的记录仍可查看。');};
+$('putAside').onclick=()=>{states[current].candidate=false;$('candidate').hidden=true;message('候选已收起，原讨论仍保留。');};
+$('insert').onclick=()=>{capture();const body=$('body'),at=body.selectionEnd;pending={topic:current,before:body.value,at};$('insertPreview').textContent=scenarios[current].candidate;$('insertLocation').textContent='插入位置：第 '+(body.value.slice(0,at).split('\n').length)+' 行，光标或选区之后。';$('insertDialog').showModal();};
+$('cancelInsert').onclick=()=>$('insertDialog').close();
+$('confirmInsert').onclick=()=>{if(!pending||pending.topic!==current||$('body').value!==pending.before){message('稿已变化，请重新选定插入位置。');$('insertDialog').close();return;}const s=states[current],chunk='\n\n'+(current==='haskell'?String.fromCharCode(96).repeat(3)+'haskell\n'+scenarios[current].candidate+'\n'+String.fromCharCode(96).repeat(3):scenarios[current].candidate)+'\n\n';const after=pending.before.slice(0,pending.at)+chunk+pending.before.slice(pending.at);s.undo={before:pending.before,after};s.body=after;s.caret=pending.at+chunk.length;$('body').value=after;$('body').setSelectionRange(s.caret,s.caret);$('undo').disabled=false;$('insertDialog').close();$('body').focus();message('已按你的确认插入；可以撤销。');};
+$('undo').onclick=()=>{const s=states[current];if(!s.undo||$('body').value!==s.undo.after){message('插入后已有新编辑，保留当前稿；可用编辑器撤销。');return;}s.body=s.undo.before;s.undo=null;$('body').value=s.body;$('undo').disabled=true;message('已还原插入前的稿，候选仍在旁边。');};
+$('focus').onclick=()=>{const on=$('desk').classList.toggle('focus');$('focus').setAttribute('aria-pressed',String(on));$('focus').textContent=on?'回到讨论':'只看稿';};
+$('review').onclick=()=>{capture();if(!states[current].body.trim()){message('纸还是空的，可以先讨论或写一点，再请 AI 读稿。');return;}$('reviewSnapshot').textContent=states[current].body;$('reviewDialog').showModal();};
+$('cancelReview').onclick=()=>$('reviewDialog').close();
+$('confirmReview').onclick=()=>{$('reviewDialog').close();addTurn('全文阅读 · 演示请求回执','已明确选择当前全文与作者留下的取舍。此板没有发送模型请求；稿中任何文字都未改动。');message('已记录本次全文阅读范围。');};
+$('leave').onclick=()=>{capture();$('nextStep').value=states[current].next;$('leaveDialog').showModal();};
+$('cancelLeave').onclick=()=>$('leaveDialog').close();
+$('confirmLeave').onclick=()=>{states[current].next=$('nextStep').value.trim();$('leaveDialog').close();$('returnNote').textContent=states[current].next||'你没有留下便笺。刚才的讨论与稿仍在。';$('returnDialog').showModal();};
+$('return').onclick=()=>{$('returnDialog').close();render();$('body').focus();message('已回到刚才的位置。');};
+render();
+</script></body></html>
